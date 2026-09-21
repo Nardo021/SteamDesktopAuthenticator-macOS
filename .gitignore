@@ -353,3 +353,11 @@ MigrationBackup/
 .ionide/
 
 .idea/
+
+# Local SDA account data. Do not commit real authenticator secrets.
+# Synthetic fixtures are fixture-*.json under tests/SDA.Core.Tests/Fixtures/ and stay tracked.
+maFiles/
+*.maFile
+*.mafile
+.env
+.env.*

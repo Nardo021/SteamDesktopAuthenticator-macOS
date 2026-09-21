@@ -1,0 +1,20 @@
+{
+  "shared_secret": "c3ludGhldGljLXNoYXJlZC1zZWNyZXQ=",
+  "serial_number": "1",
+  "revocation_code": "FIXTURE",
+  "uri": "otpauth://totp/Steam:fixture_user?secret=SYNTHETIC&issuer=Steam",
+  "server_time": 1600000000,
+  "account_name": "fixture_user",
+  "token_gid": "fixture-token-gid",
+  "identity_secret": "c3ludGhldGljLWlkZW50aXR5LXNlY3JldA==",
+  "secret_1": "c3ludGhldGljLXNlY3JldC0x",
+  "status": 1,
+  "device_id": "android:00000000-0000-0000-0000-000000000001",
+  "fully_enrolled": true,
+  "Session": {
+    "SteamID": 76561198000000001,
+    "AccessToken": "synthetic-access-token",
+    "RefreshToken": "synthetic-refresh-token",
+    "SessionID": "synthetic-session-id"
+  }
+}

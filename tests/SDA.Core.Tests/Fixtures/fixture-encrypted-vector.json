@@ -1,0 +1,7 @@
+{
+  "password": "test-passkey",
+  "salt": "ECEyQ1Rldoc=",
+  "iv": "ABEiM0RVZneImaq7zN3u/w==",
+  "ciphertext": "nz8/Qy7A86E1FfpKMBnQRFQZ8AyiXbeQ6tqCVx4ThySwVfnSgrIus0b4//TELF8xaao/gLgHfrCJ+qXtTcmfgWyjI71m0wa5Z2ZOMxNs8A0qXEppR/JkM6KINo/bWlR9",
+  "plaintext": "{\"account_name\":\"fixture_user\",\"shared_secret\":\"c3ludGhldGljLXNoYXJlZC1zZWNyZXQ=\"}"
+}
