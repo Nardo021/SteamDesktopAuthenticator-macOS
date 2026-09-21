@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDA.Core", "src\SDA.Core\SDA.Core.csproj", "{C31336DD-0489-4899-A82D-15361EC5E9CA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDA.Platform.Mac", "src\SDA.Platform.Mac\SDA.Platform.Mac.csproj", "{6F4C2A18-1B7E-4D93-9A20-5C8E7B1D4F62}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SDA.Core.Tests", "tests\SDA.Core.Tests\SDA.Core.Tests.csproj", "{941D23D9-B212-4D7C-A827-DC960271C52F}"
@@ -36,6 +38,10 @@ Global
 		{941D23D9-B212-4D7C-A827-DC960271C52F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{941D23D9-B212-4D7C-A827-DC960271C52F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{941D23D9-B212-4D7C-A827-DC960271C52F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4C2A18-1B7E-4D93-9A20-5C8E7B1D4F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4C2A18-1B7E-4D93-9A20-5C8E7B1D4F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4C2A18-1B7E-4D93-9A20-5C8E7B1D4F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4C2A18-1B7E-4D93-9A20-5C8E7B1D4F62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
