@@ -234,6 +234,31 @@ namespace SDA.Core.Storage
             return accounts != null && accounts.Length == 1;
         }
 
+        public AccountLoadResult LoadAccounts(string passKey)
+        {
+            int entryCount = this.Entries == null ? 0 : this.Entries.Count;
+            if (this.Encrypted && entryCount > 0)
+            {
+                if (passKey == null)
+                {
+                    return AccountLoadResult.PasswordRequired();
+                }
+
+                if (passKey.Length == 0 || !this.VerifyPasskey(passKey))
+                {
+                    return AccountLoadResult.InvalidPassword();
+                }
+            }
+
+            SteamGuardAccount[] accounts = this.GetAllAccounts(passKey);
+            if (accounts == null || accounts.Length == 0)
+            {
+                return AccountLoadResult.NoAccounts();
+            }
+
+            return AccountLoadResult.Success(accounts);
+        }
+
         public bool RemoveAccount(SteamGuardAccount account, bool deleteMaFile = true)
         {
             ManifestEntry entry = (from e in this.Entries where e.SteamID == account.Session.SteamID select e).FirstOrDefault();
