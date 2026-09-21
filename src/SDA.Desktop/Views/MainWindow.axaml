@@ -1,0 +1,53 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.MainWindow"
+        Title="Steam Desktop Authenticator"
+        Width="440"
+        Height="520"
+        MinWidth="360"
+        MinHeight="440"
+        WindowStartupLocation="CenterScreen"
+        KeyDown="OnKeyDown">
+    <Grid Margin="28" RowDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+        <TextBlock Grid.Row="0" Text="Account" FontWeight="SemiBold" />
+        <ComboBox Grid.Row="1"
+                  Margin="0,8,0,16"
+                  HorizontalAlignment="Stretch"
+                  ItemsSource="{Binding Accounts}"
+                  SelectedItem="{Binding SelectedAccount}"
+                  PlaceholderText="No accounts">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <StackPanel Grid.Row="2" Spacing="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Steam Guard Code" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding CurrentCode}"
+                       FontSize="42"
+                       FontWeight="SemiBold"
+                       FontFamily="Menlo, Consolas, monospace"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding CountdownText}" HorizontalAlignment="Center" />
+            <Button Content="Copy Code"
+                    MinWidth="160"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    IsEnabled="{Binding CanCopyCode}"
+                    Click="OnCopyClick" />
+        </StackPanel>
+
+        <Button Grid.Row="3"
+                Content="Open maFiles Folder"
+                HorizontalAlignment="Stretch"
+                Margin="0,8,0,16"
+                Click="OnOpenFolderClick" />
+        <TextBlock Grid.Row="4" Text="Status" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="5"
+                   Margin="0,6,0,0"
+                   Text="{Binding StatusText}"
+                   TextWrapping="Wrap" />
+    </Grid>
+</Window>
