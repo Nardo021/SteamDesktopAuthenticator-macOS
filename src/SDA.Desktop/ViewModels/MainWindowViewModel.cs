@@ -19,6 +19,8 @@ namespace SDA.Desktop.ViewModels
         private readonly IFolderPicker _folders;
         private readonly IClipboardService _clipboard;
         private readonly string _defaultMaFilesDirectory;
+        private readonly SessionRefreshService _sessionRefresh;
+        private readonly SessionPersistenceService _persistence;
 
         private IReadOnlyList<AccountViewModel> _accountList = new AccountViewModel[0];
         private AccountViewModel _selectedAccount;
@@ -32,6 +34,7 @@ namespace SDA.Desktop.ViewModels
         private string _passKey;
         private string _directory;
         private int _refreshing;
+        private int _sessionOperation;
 
         public MainWindowViewModel(
             AccountService accounts,
@@ -40,7 +43,9 @@ namespace SDA.Desktop.ViewModels
             IEncryptionPrompt prompt,
             IFolderPicker folders,
             IClipboardService clipboard,
-            string defaultMaFilesDirectory)
+            string defaultMaFilesDirectory,
+            IAccessTokenRefresher accessTokenRefresher = null,
+            SessionPersistenceService persistence = null)
         {
             _accounts = accounts;
             _settings = settings;
@@ -49,6 +54,8 @@ namespace SDA.Desktop.ViewModels
             _folders = folders;
             _clipboard = clipboard;
             _defaultMaFilesDirectory = defaultMaFilesDirectory;
+            _sessionRefresh = new SessionRefreshService(accessTokenRefresher);
+            _persistence = persistence ?? new SessionPersistenceService();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -71,8 +78,14 @@ namespace SDA.Desktop.ViewModels
 
                 _selectedAccount = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanUseSessionActions));
                 ApplyDisplay();
             }
+        }
+
+        public bool CanUseSessionActions
+        {
+            get { return SelectedAccount != null && _sessionOperation == 0; }
         }
 
         public string CurrentCode
@@ -198,6 +211,123 @@ namespace SDA.Desktop.ViewModels
         public void SetFailureStatus(string status)
         {
             SetBaseStatus(status);
+        }
+
+        public bool TryBeginSessionOperation()
+        {
+            if (SelectedAccount == null || System.Threading.Interlocked.Exchange(ref _sessionOperation, 1) == 1)
+            {
+                return false;
+            }
+
+            OnPropertyChanged(nameof(CanUseSessionActions));
+            return true;
+        }
+
+        public void EndSessionOperation()
+        {
+            System.Threading.Interlocked.Exchange(ref _sessionOperation, 0);
+            OnPropertyChanged(nameof(CanUseSessionActions));
+        }
+
+        public async Task<string> CommitRefreshedSessionAsync(SteamAuth.SessionData session, IEncryptionPrompt prompt)
+        {
+            if (SelectedAccount == null || SelectedAccount.Account == null)
+            {
+                return "Unable to save refreshed session.";
+            }
+
+            string error = await PersistSessionAsync(SelectedAccount.Account, session, true, prompt);
+            if (error == null)
+            {
+                SetBaseStatus("Login successful.");
+            }
+            else
+            {
+                SetBaseStatus(error);
+            }
+
+            return error;
+        }
+
+        public async Task ForceRefreshAsync()
+        {
+            if (!TryBeginSessionOperation())
+            {
+                return;
+            }
+
+            SteamAuth.SteamGuardAccount account = SelectedAccount.Account;
+            try
+            {
+                if (!_sessionRefresh.CanForceRefresh(account == null ? null : account.Session))
+                {
+                    SetBaseStatus("Session cannot be refreshed. Use Login Again.");
+                    return;
+                }
+
+                SetBaseStatus("Refreshing session...");
+                SteamAuth.SessionData previous = SessionPersistenceService.Clone(account.Session);
+                try
+                {
+                    await _sessionRefresh.RefreshAsync(account.Session, System.Threading.CancellationToken.None);
+                    string error = await PersistSessionAsync(account, account.Session, false, _prompt);
+                    if (error != null)
+                    {
+                        account.Session = previous;
+                        SetBaseStatus(error);
+                        return;
+                    }
+
+                    SetBaseStatus("Session refreshed.");
+                }
+                catch (System.Exception)
+                {
+                    account.Session = previous;
+                    SetBaseStatus("Unable to refresh session.");
+                }
+            }
+            finally
+            {
+                EndSessionOperation();
+            }
+        }
+
+        private async Task<string> PersistSessionAsync(SteamAuth.SteamGuardAccount account, SteamAuth.SessionData session, bool markFullyEnrolled, IEncryptionPrompt prompt)
+        {
+            string key = _passKey;
+            IEncryptionPrompt encryptionPrompt = prompt ?? _prompt;
+            while (true)
+            {
+                SessionSaveResult saved = _persistence.Commit(account, session, _directory, key, markFullyEnrolled);
+                if (saved.Status == SessionSaveStatus.Saved)
+                {
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        _passKey = key;
+                    }
+
+                    return null;
+                }
+
+                if (saved.Status != SessionSaveStatus.KeyRequired && saved.Status != SessionSaveStatus.InvalidKey)
+                {
+                    return "Unable to save refreshed session.";
+                }
+
+                if (encryptionPrompt == null)
+                {
+                    return "Unable to save refreshed session.";
+                }
+
+                string entered = await encryptionPrompt.PromptAsync(saved.Status == SessionSaveStatus.InvalidKey ? "Incorrect password." : null);
+                if (string.IsNullOrEmpty(entered))
+                {
+                    return "Unable to save refreshed session.";
+                }
+
+                key = entered;
+            }
         }
 
         public async Task LoadDirectoryAsync(string directory, bool persist)
