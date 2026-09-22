@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <!-- Authoritative product version for this macOS port. Packaging, Info.plist, and assembly metadata read this value. -->
+    <SdaProductVersion>1.0.0</SdaProductVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="$([System.String]::Copy('$(MSBuildProjectName)').StartsWith('SDA.'))">
+    <Version>$(SdaProductVersion)</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <InformationalVersion>$(SdaProductVersion)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <Product>Steam Desktop Authenticator</Product>
+    <Authors>Nardo021</Authors>
+    <Copyright>Copyright (c) 2015 Jesse Cardone and contributors</Copyright>
+  </PropertyGroup>
+</Project>

@@ -33,6 +33,9 @@ namespace SDA.Desktop.Services
 
     public sealed class LoginChallengeHandler : IAuthenticator
     {
+        public const string ExistingAuthenticatorRequiredMessage =
+            "This account already has an authenticator linked. You must remove that authenticator before adding SDA.";
+
         private readonly IDeviceCodeProvider _deviceCodes;
         private readonly Func<string, bool, CancellationToken, Task<string>> _emailCode;
         private readonly Action<string> _reportRepeatedDeviceFailure;
@@ -75,12 +78,17 @@ namespace SDA.Desktop.Services
             _cancellationToken.ThrowIfCancellationRequested();
             if (_deviceCodes == null)
             {
-                throw new InvalidOperationException("Account does not contain a valid authenticator");
+                throw new InvalidOperationException(ExistingAuthenticatorRequiredMessage);
             }
 
             string deviceCode = await _deviceCodes.GenerateAsync(_cancellationToken);
             _deviceCodesGenerated++;
-            if (string.IsNullOrEmpty(deviceCode))
+            if (deviceCode == null)
+            {
+                throw new InvalidOperationException(ExistingAuthenticatorRequiredMessage);
+            }
+
+            if (deviceCode.Length == 0)
             {
                 throw new InvalidOperationException("Account does not contain a valid authenticator");
             }

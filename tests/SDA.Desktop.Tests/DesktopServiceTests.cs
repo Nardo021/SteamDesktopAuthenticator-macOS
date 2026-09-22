@@ -16,6 +16,7 @@ namespace SDA.Desktop.Tests
 {
     public class DesktopServiceTests : IDisposable
     {
+        private static readonly object MacAppPathsLock = new object();
         private readonly string _root;
 
         public DesktopServiceTests()
@@ -37,15 +38,38 @@ namespace SDA.Desktop.Tests
         [Fact]
         public void MacAppPaths_UseApplicationDataDirectory()
         {
-            string applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string support = MacAppPaths.GetApplicationSupportDirectory();
-            string maFiles = MacAppPaths.GetDefaultMaFilesDirectory();
-            string settings = MacAppPaths.GetSettingsFilePath();
+            lock (MacAppPathsLock)
+            {
+                Environment.SetEnvironmentVariable("SDA_DATA_DIRECTORY", null);
+                string applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string support = MacAppPaths.GetApplicationSupportDirectory();
+                string maFiles = MacAppPaths.GetDefaultMaFilesDirectory();
+                string settings = MacAppPaths.GetSettingsFilePath();
 
-            Assert.Equal(Path.Combine(applicationData, "Steam Desktop Authenticator"), support);
-            Assert.Equal(Path.Combine(support, "maFiles"), maFiles);
-            Assert.Equal(Path.Combine(support, "settings.json"), settings);
-            Assert.DoesNotContain("Users" + Path.DirectorySeparatorChar + "username", support);
+                Assert.Equal(Path.Combine(applicationData, "Steam Desktop Authenticator"), support);
+                Assert.Equal(Path.Combine(support, "maFiles"), maFiles);
+                Assert.Equal(Path.Combine(support, "settings.json"), settings);
+                Assert.DoesNotContain("Users" + Path.DirectorySeparatorChar + "username", support);
+            }
+        }
+
+        [Fact]
+        public void MacAppPaths_OverrideUsesEnvironmentVariable()
+        {
+            lock (MacAppPathsLock)
+            {
+                string expected = Path.Combine(_root, "override-support");
+                Environment.SetEnvironmentVariable("SDA_DATA_DIRECTORY", expected);
+                try
+                {
+                    Assert.Equal(expected, MacAppPaths.GetApplicationSupportDirectory());
+                    Assert.Equal(Path.Combine(expected, "maFiles"), MacAppPaths.GetDefaultMaFilesDirectory());
+                }
+                finally
+                {
+                    Environment.SetEnvironmentVariable("SDA_DATA_DIRECTORY", null);
+                }
+            }
         }
 
         [Fact]

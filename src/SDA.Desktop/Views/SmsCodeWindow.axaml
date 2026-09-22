@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.SmsCodeWindow"
+        Title="SMS Code"
+        Width="420"
+        Height="220"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock x:Name="PromptText" Text="Please input the SMS code sent to your phone." TextWrapping="Wrap" />
+        <TextBox x:Name="CodeBox" />
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" MinHeight="20" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+            <Button Content="Submit" MinWidth="88" IsDefault="True" Click="OnSubmitClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>

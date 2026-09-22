@@ -16,6 +16,7 @@ namespace SDA.Desktop.Views
         private readonly ISteamLoginService _login;
         private readonly Func<SessionData, IEncryptionPrompt, Task<string>> _commit;
         private readonly LoginWindowViewModel _viewModel;
+        private readonly bool _import;
         private CancellationTokenSource _cancellation;
         private int _loginStarted;
 
@@ -28,14 +29,32 @@ namespace SDA.Desktop.Views
             SteamGuardAccount account,
             ISteamLoginService login,
             Func<SessionData, IEncryptionPrompt, Task<string>> commit)
+            : this(account, login, commit, false)
+        {
+        }
+
+        public static LoginWindow ForImport(SteamGuardAccount account, ISteamLoginService login)
+        {
+            return new LoginWindow(account, login, null, true);
+        }
+
+        private LoginWindow(
+            SteamGuardAccount account,
+            ISteamLoginService login,
+            Func<SessionData, IEncryptionPrompt, Task<string>> commit,
+            bool import)
         {
             InitializeComponent();
             _account = account;
             _login = login;
             _commit = commit;
-            _viewModel = new LoginWindowViewModel(account == null ? "" : account.AccountName);
+            _import = import;
+            _viewModel = new LoginWindowViewModel(account == null ? "" : account.AccountName, import);
             DataContext = _viewModel;
+            Title = _viewModel.Title;
         }
+
+        public SessionData ResultSession { get; private set; }
 
         public void Report(string status)
         {
@@ -82,6 +101,14 @@ namespace SDA.Desktop.Views
                 if (!result.Succeeded || result.Session == null)
                 {
                     _viewModel.MarkFailed(result.Error);
+                    return;
+                }
+
+                if (_import)
+                {
+                    ResultSession = result.Session;
+                    _viewModel.MarkSucceeded();
+                    Close(true);
                     return;
                 }
 

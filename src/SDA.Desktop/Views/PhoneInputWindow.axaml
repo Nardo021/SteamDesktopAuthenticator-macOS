@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.PhoneInputWindow"
+        Title="Phone Number"
+        Width="420"
+        Height="260"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock Text="Phone Number" />
+        <TextBox x:Name="PhoneBox" PlaceholderText="+61 4XXXXXXXX" />
+        <TextBlock Text="Country Code" />
+        <TextBox x:Name="CountryBox" PlaceholderText="AU" />
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" MinHeight="20" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+            <Button Content="Continue" MinWidth="88" IsDefault="True" Click="OnContinueClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>

@@ -16,6 +16,13 @@ namespace SDA.Desktop.Services
             IAuthenticator challenges,
             ILoginStatus progress,
             CancellationToken cancellationToken);
+
+        Task<SteamLoginResult> AuthenticateCredentialsAsync(
+            string username,
+            string password,
+            IAuthenticator challenges,
+            ILoginStatus progress,
+            CancellationToken cancellationToken);
     }
 
     public interface ILoginStatus
@@ -61,14 +68,29 @@ namespace SDA.Desktop.Services
     {
         private static readonly TimeSpan ConnectionTimeout = TimeSpan.FromSeconds(30);
 
-        public async Task<SteamLoginResult> LoginAgainAsync(
+        public Task<SteamLoginResult> LoginAgainAsync(
             SteamGuardAccount account,
             string password,
             IAuthenticator challenges,
             ILoginStatus progress,
             CancellationToken cancellationToken)
         {
-            if (account == null || string.IsNullOrEmpty(account.AccountName) || string.IsNullOrEmpty(password))
+            return AuthenticateCredentialsAsync(
+                account == null ? null : account.AccountName,
+                password,
+                challenges,
+                progress,
+                cancellationToken);
+        }
+
+        public async Task<SteamLoginResult> AuthenticateCredentialsAsync(
+            string username,
+            string password,
+            IAuthenticator challenges,
+            ILoginStatus progress,
+            CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 return SteamLoginResult.Fail("Steam login failed.");
             }
@@ -87,7 +109,7 @@ namespace SDA.Desktop.Services
                 Report(progress, "Logging in...");
                 CredentialsAuthSession authSession = await steamClient.Authentication.BeginAuthSessionViaCredentialsAsync(new AuthSessionDetails
                 {
-                    Username = account.AccountName,
+                    Username = username,
                     Password = password,
                     IsPersistentSession = false,
                     PlatformType = EAuthTokenPlatformType.k_EAuthTokenPlatformType_MobileApp,
@@ -110,9 +132,11 @@ namespace SDA.Desktop.Services
             {
                 return SteamLoginResult.Cancel();
             }
-            catch (InvalidOperationException ex) when (ex.Message == "Account does not contain a valid authenticator")
+            catch (InvalidOperationException ex) when (
+                ex.Message == "Account does not contain a valid authenticator"
+                || ex.Message == LoginChallengeHandler.ExistingAuthenticatorRequiredMessage)
             {
-                return SteamLoginResult.Fail("Account does not contain a valid authenticator");
+                return SteamLoginResult.Fail(ex.Message);
             }
             catch (Exception)
             {

@@ -33,6 +33,27 @@ namespace SDA.Core.Tests
             Assert.False(options.Silent);
         }
 
+        [Fact]
+        public void StartupParser_ReadsShortAndLongFlags()
+        {
+            CommandLineOptions shortFlags = CommandLineStartup.Parse(new[] { "-k", "fixture-key", "-s" });
+            CommandLineOptions longFlags = CommandLineStartup.Parse(new[] { "--encryption-key", "fixture-key", "--silent" });
+
+            Assert.Equal("fixture-key", shortFlags.EncryptionKey);
+            Assert.True(shortFlags.Silent);
+            Assert.Equal("fixture-key", longFlags.EncryptionKey);
+            Assert.True(longFlags.Silent);
+        }
+
+        [Fact]
+        public void StartupParser_UnknownArgumentsDoNotThrow()
+        {
+            CommandLineOptions options = CommandLineStartup.Parse(new[] { "--unknown-flag", "value" });
+
+            Assert.Null(options.EncryptionKey);
+            Assert.False(options.Silent);
+        }
+
         private static CommandLineOptions Parse(params string[] args)
         {
             CommandLineOptions options = null;

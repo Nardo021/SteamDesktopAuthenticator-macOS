@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.ImportAccountWindow"
+        Title="Import Account"
+        Width="500"
+        Height="320"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock Text="Source .maFile" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <TextBox Grid.Column="0" Text="{Binding SourcePath}" IsReadOnly="True" />
+            <Button Grid.Column="1" Content="Browse" MinWidth="88" Click="OnBrowseClick" />
+        </Grid>
+        <TextBlock Text="Source maFile encryption passkey" />
+        <TextBox x:Name="SourcePasskeyBox" PasswordChar="*" />
+        <TextBlock Text="Leave blank if the selected maFile is not encrypted." TextWrapping="Wrap" />
+        <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="32" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+            <Button Content="Import" MinWidth="88" IsDefault="True" IsEnabled="{Binding CanImport}" Click="OnImportClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>

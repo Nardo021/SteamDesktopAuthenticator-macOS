@@ -6,4 +6,6 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+    <!-- TrayIcon is created once in App.axaml.cs so the NativeMenu can be rebuilt when accounts change.
+         TrayIcon.Clicked is intentionally unused: macOS opens the native menu instead. -->
 </Application>

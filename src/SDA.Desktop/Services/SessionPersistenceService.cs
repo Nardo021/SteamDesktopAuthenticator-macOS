@@ -1,8 +1,6 @@
 using SDA.Core.Storage;
 using SteamAuth;
 using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace SDA.Desktop.Services
 {
@@ -77,34 +75,37 @@ namespace SDA.Desktop.Services
                 }
             }
 
-            DirectoryBackup backup = DirectoryBackup.Capture(directory);
-            SessionData previousSession = Clone(account.Session);
-            bool previousEnrolled = account.FullyEnrolled;
-            account.Session = newSession;
-            if (markFullyEnrolled)
+            return ManifestMutationGate.Shared.Run(() =>
             {
-                account.FullyEnrolled = true;
-            }
+                MaFilesDirectorySnapshot backup = MaFilesDirectorySnapshot.Capture(directory);
+                SessionData previousSession = Clone(account.Session);
+                bool previousEnrolled = account.FullyEnrolled;
+                account.Session = newSession;
+                if (markFullyEnrolled)
+                {
+                    account.FullyEnrolled = true;
+                }
 
-            bool saved;
-            try
-            {
-                saved = manifest.SaveAccount(account, encrypt, encrypt ? passKey : null);
-            }
-            catch (Exception)
-            {
-                saved = false;
-            }
+                bool saved;
+                try
+                {
+                    saved = manifest.SaveAccount(account, encrypt, encrypt ? passKey : null);
+                }
+                catch (Exception)
+                {
+                    saved = false;
+                }
 
-            if (!saved)
-            {
-                backup.Restore();
-                account.Session = previousSession;
-                account.FullyEnrolled = previousEnrolled;
-                return SessionSaveResult.Failed();
-            }
+                if (!saved)
+                {
+                    backup.Restore();
+                    account.Session = previousSession;
+                    account.FullyEnrolled = previousEnrolled;
+                    return SessionSaveResult.Failed();
+                }
 
-            return SessionSaveResult.Saved();
+                return SessionSaveResult.Saved();
+            });
         }
 
         public static SessionData Clone(SessionData session)
@@ -121,60 +122,6 @@ namespace SDA.Desktop.Services
                 RefreshToken = session.RefreshToken,
                 SessionID = session.SessionID,
             };
-        }
-
-        private sealed class DirectoryBackup
-        {
-            private readonly string _directory;
-            private readonly Dictionary<string, byte[]> _files;
-
-            private DirectoryBackup(string directory, Dictionary<string, byte[]> files)
-            {
-                _directory = directory;
-                _files = files;
-            }
-
-            public static DirectoryBackup Capture(string directory)
-            {
-                Dictionary<string, byte[]> files = new Dictionary<string, byte[]>(StringComparer.Ordinal);
-                if (Directory.Exists(directory))
-                {
-                    foreach (string path in Directory.GetFiles(directory))
-                    {
-                        files[Path.GetFileName(path)] = File.ReadAllBytes(path);
-                    }
-                }
-
-                return new DirectoryBackup(directory, files);
-            }
-
-            public void Restore()
-            {
-                if (!Directory.Exists(_directory))
-                {
-                    return;
-                }
-
-                foreach (string path in Directory.GetFiles(_directory))
-                {
-                    if (!_files.ContainsKey(Path.GetFileName(path)))
-                    {
-                        File.SetAttributes(path, FileAttributes.Normal);
-                        File.Delete(path);
-                    }
-                }
-
-                foreach (KeyValuePair<string, byte[]> pair in _files)
-                {
-                    string path = Path.Combine(_directory, pair.Key);
-                    if (File.Exists(path))
-                    {
-                        File.SetAttributes(path, FileAttributes.Normal);
-                    }
-
-                    File.WriteAllBytes(path, pair.Value);
-                }
-            }
         }
     }
 }

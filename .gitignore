@@ -361,3 +361,21 @@ maFiles/
 *.mafile
 .env
 .env.*
+
+# macOS packaging output. Keep packaging/macos templates and scripts tracked.
+dist/
+*.dmg
+*.app/
+*.p12
+*.p8
+*.cer
+*.mobileprovision
+*.notary.json
+.notarytool/
+
+# Local Phase 2 helper leftover. Not part of the product or release.
+.phase2-setup/
+
+# Keep the v1.0.0 notes despite Visual Studio [Rr]eleases/ ignore.
+!docs/releases/
+!docs/releases/**

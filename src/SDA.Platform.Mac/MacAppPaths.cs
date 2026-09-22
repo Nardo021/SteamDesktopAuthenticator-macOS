@@ -11,6 +11,12 @@ namespace SDA.Platform.Mac
 
         public static string GetApplicationSupportDirectory()
         {
+            string overrideDirectory = Environment.GetEnvironmentVariable("SDA_DATA_DIRECTORY");
+            if (!string.IsNullOrWhiteSpace(overrideDirectory))
+            {
+                return overrideDirectory;
+            }
+
             string applicationData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             if (string.IsNullOrEmpty(applicationData))
             {

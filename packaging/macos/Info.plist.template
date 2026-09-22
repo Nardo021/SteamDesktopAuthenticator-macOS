@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>__CFBUNDLE_EXECUTABLE__</string>
+    <key>CFBundleName</key>
+    <string>__CFBUNDLE_NAME__</string>
+    <key>CFBundleDisplayName</key>
+    <string>__CFBUNDLE_DISPLAY_NAME__</string>
+    <key>CFBundleIdentifier</key>
+    <string>__CFBUNDLE_IDENTIFIER__</string>
+    <key>CFBundleVersion</key>
+    <string>__CFBUNDLE_VERSION__</string>
+    <key>CFBundleShortVersionString</key>
+    <string>__CFBUNDLE_SHORT_VERSION__</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>__CFBUNDLE_ICON_FILE__</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>LSMinimumSystemVersion</key>
+    <string>__LS_MINIMUM_SYSTEM_VERSION__</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.utilities</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright (c) 2015 Jesse Cardone and contributors</string>
+</dict>
+</plist>

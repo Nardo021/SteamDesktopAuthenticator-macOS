@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.DeactivateChoiceWindow"
+        Title="Deactivate Authenticator"
+        Width="480"
+        Height="260"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" Spacing="12">
+        <TextBlock x:Name="PromptText" TextWrapping="Wrap" />
+        <TextBlock Text="This changes the Steam account security configuration." TextWrapping="Wrap" />
+        <StackPanel Spacing="8">
+            <Button Content="Remove Steam Guard completely" HorizontalAlignment="Stretch" Click="OnRemoveCompletelyClick" />
+            <Button Content="Switch back to Email authentication" HorizontalAlignment="Stretch" Click="OnEmailClick" />
+            <Button Content="Cancel" HorizontalAlignment="Stretch" IsCancel="True" Click="OnCancelClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>

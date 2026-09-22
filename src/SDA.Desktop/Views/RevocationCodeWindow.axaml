@@ -1,0 +1,21 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.RevocationCodeWindow"
+        Title="Revocation Code"
+        Width="460"
+        Height="280"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock x:Name="PromptText" TextWrapping="Wrap" FontWeight="SemiBold" />
+        <TextBox x:Name="CodeBox" IsReadOnly="True" FontFamily="Menlo, Consolas, monospace" FontSize="22" />
+        <TextBlock Text="You may need it to recover or remove the authenticator." TextWrapping="Wrap" />
+        <TextBlock x:Name="ConfirmPrompt" IsVisible="False" Text="Enter the revocation code you just saved:" TextWrapping="Wrap" />
+        <TextBox x:Name="ConfirmBox" IsVisible="False" />
+        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" MinHeight="20" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button x:Name="CancelButton" Content="Cancel" MinWidth="88" IsCancel="True" IsVisible="False" Click="OnCancelClick" />
+            <Button x:Name="ContinueButton" Content="Continue" MinWidth="88" IsDefault="True" Click="OnContinueClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>

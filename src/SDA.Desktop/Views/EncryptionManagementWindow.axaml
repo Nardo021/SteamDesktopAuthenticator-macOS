@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.EncryptionManagementWindow"
+        Title="{Binding Title}"
+        Width="460"
+        Height="360"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <StackPanel Margin="20" Spacing="10">
+        <StackPanel Spacing="10" IsVisible="{Binding IsManage}">
+            <TextBlock Text="Current passkey" />
+            <TextBox x:Name="CurrentBox" PasswordChar="*" />
+        </StackPanel>
+        <TextBlock Text="New passkey" />
+        <TextBox x:Name="NewBox" PasswordChar="*" />
+        <TextBlock Text="Confirm new passkey" />
+        <TextBox x:Name="ConfirmBox" PasswordChar="*" />
+        <TextBlock Text="{Binding NewKeyHint}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="24" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+            <Button Content="Continue" MinWidth="88" IsDefault="True" IsEnabled="{Binding CanSubmit}" Click="OnContinueClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>

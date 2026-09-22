@@ -18,9 +18,22 @@ namespace SDA.Desktop.ViewModels
         private string _statusText = "";
 
         public LoginWindowViewModel(string accountName)
+            : this(accountName, false)
+        {
+        }
+
+        public LoginWindowViewModel(string accountName, bool import)
         {
             AccountName = accountName ?? "";
+            Title = import ? "Import Account" : "Login Again";
+            SessionHint = import
+                ? "Sign in so this imported account can be saved with a current Steam session."
+                : "Your Steam session will be renewed.";
         }
+
+        public string Title { get; }
+
+        public string SessionHint { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

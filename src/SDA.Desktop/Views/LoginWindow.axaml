@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.LoginWindow"
-        Title="Login Again"
+        Title="{Binding Title}"
         Width="420"
         Height="280"
         CanResize="False"
@@ -11,7 +11,7 @@
         <TextBox Text="{Binding AccountName}" IsReadOnly="True" />
         <TextBlock Text="Password" />
         <TextBox x:Name="PasswordBox" PasswordChar="*" />
-        <TextBlock Text="Your Steam session will be renewed." TextWrapping="Wrap" />
+        <TextBlock Text="{Binding SessionHint}" TextWrapping="Wrap" />
         <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />

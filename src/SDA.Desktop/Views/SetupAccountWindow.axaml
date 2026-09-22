@@ -1,0 +1,78 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.SetupAccountWindow"
+        Title="Setup New Account"
+        Width="460"
+        Height="340"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="20">
+        <StackPanel Spacing="10" IsVisible="{Binding IsLoginVisible}">
+            <TextBlock Text="Steam username" />
+            <TextBox Text="{Binding Username}" />
+            <TextBlock Text="Steam password" />
+            <TextBox x:Name="PasswordBox" PasswordChar="*" />
+            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+                <Button Content="{Binding LoginButtonText}"
+                        MinWidth="120"
+                        IsDefault="True"
+                        IsEnabled="{Binding CanLogin}"
+                        Click="OnLoginClick" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="10" IsVisible="{Binding IsConfirmContinueVisible}">
+            <TextBlock Text="Steam account login succeeded. Continue adding Steam Desktop Authenticator as the mobile authenticator for this account?" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                <Button Content="Cancel" MinWidth="88" Click="OnDeclineContinueClick" />
+                <Button Content="Continue" MinWidth="88" Click="OnContinueClick" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="10" IsVisible="{Binding IsBusyVisible}">
+            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Spacing="10" IsVisible="{Binding IsEmailVisible}">
+            <TextBlock Text="{Binding EmailPrompt}" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                <Button Content="Cancel" MinWidth="88" Click="OnCancelClick" />
+                <Button Content="I've Confirmed" MinWidth="120" Click="OnEmailConfirmedClick" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="10" IsVisible="{Binding IsNewPasskeyVisible}">
+            <TextBlock Text="Encryption passkey" />
+            <TextBox x:Name="NewPasskeyBox" PasswordChar="*" />
+            <TextBlock Text="Leave blank to store the maFile without SDA encryption." TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                <Button Content="Cancel" MinWidth="88" Click="OnCancelClick" />
+                <Button Content="Continue" MinWidth="88" Click="OnNewPasskeyClick" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="10" IsVisible="{Binding IsExistingPasskeyVisible}">
+            <TextBlock Text="Please enter your current encryption passkey." TextWrapping="Wrap" />
+            <TextBox x:Name="ExistingPasskeyBox" PasswordChar="*" />
+            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                <Button Content="Cancel" MinWidth="88" Click="OnCancelClick" />
+                <Button Content="Continue" MinWidth="88" Click="OnExistingPasskeyClick" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="10" IsVisible="{Binding IsFinishedVisible}">
+            <TextBlock Text="{Binding FinishedTitle}" TextWrapping="Wrap" FontWeight="SemiBold" />
+            <TextBox Text="{Binding FinishedDetail}"
+                     IsReadOnly="True"
+                     IsVisible="{Binding FinishedDetail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                     FontFamily="Menlo, Consolas, monospace"
+                     FontSize="20" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Close" MinWidth="88" Click="OnCloseFinishedClick" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

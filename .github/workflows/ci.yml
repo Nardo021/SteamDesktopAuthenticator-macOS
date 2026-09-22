@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - name: Restore
+        run: dotnet restore
+      - name: Build Core
+        run: dotnet build src/SDA.Core/SDA.Core.csproj -c Release --no-restore
+      - name: Build SteamAuth
+        run: dotnet build lib/SteamAuth/SteamAuth/SteamAuth.csproj -c Release
+      - name: Build Platform.Mac
+        run: dotnet build src/SDA.Platform.Mac/SDA.Platform.Mac.csproj -c Release --no-restore
+      - name: Build Desktop
+        run: dotnet build src/SDA.Desktop/SDA.Desktop.csproj -c Release --no-restore
+      - name: Test Core
+        run: dotnet test tests/SDA.Core.Tests/SDA.Core.Tests.csproj -c Release
+      - name: Test Desktop
+        run: dotnet test tests/SDA.Desktop.Tests/SDA.Desktop.Tests.csproj -c Release

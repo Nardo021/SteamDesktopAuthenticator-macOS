@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="SDA.Desktop.Views.ConfirmationPopupWindow"
+        Title="Confirmation"
+        Width="360"
+        Height="220"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <StackPanel Margin="20" Spacing="12">
+        <TextBlock Text="{Binding AccountName, StringFormat=Account: {0}}" />
+        <TextBlock Text="Confirmation" FontWeight="SemiBold" />
+        <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="36" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+            <Button Content="Deny"
+                    MinWidth="88"
+                    IsEnabled="{Binding CanAct}"
+                    Click="OnDenyClick" />
+            <Button Content="Accept"
+                    MinWidth="88"
+                    IsEnabled="{Binding CanAct}"
+                    Click="OnAcceptClick" />
+        </StackPanel>
+    </StackPanel>
+</Window>
