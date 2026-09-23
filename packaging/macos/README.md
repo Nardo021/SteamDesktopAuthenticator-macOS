@@ -1,6 +1,6 @@
 # macOS packaging
 
-These scripts produce **unsigned** `.app` bundles and DMGs from the current MSBuild `Version`. That is the v1.0.0 public release path.
+These scripts produce **unsigned** `.app` bundles and DMGs from the current MSBuild `Version`. That is the public release path.
 
 ```text
 Release status: READY FOR UNSIGNED PUBLIC RELEASE
@@ -52,7 +52,7 @@ It does not claim Gatekeeper or Apple verification.
 
 ## Optional future signing
 
-`sign-app.sh`, `notarize.sh`, and `SDA.entitlements` are kept for a later signed release. They are **not** part of the v1.0.0 workflow.
+`sign-app.sh`, `notarize.sh`, and `SDA.entitlements` are kept for a later signed release. They are **not** part of the unsigned public workflow.
 
 ```bash
 export APPLE_SIGN_IDENTITY='Developer ID Application: Name (TEAMID)'
@@ -68,7 +68,7 @@ Do not store Apple passwords, `.p8` keys, or certificates in the repository.
 
 ## Entitlements
 
-`SDA.entitlements` enables only `com.apple.security.cs.allow-jit` for the .NET runtime. App Sandbox is not enabled. v1.0.0 does not apply this file because it is not signed.
+`SDA.entitlements` enables only `com.apple.security.cs.allow-jit` for the .NET runtime. App Sandbox is not enabled. Unsigned public releases do not apply this file because they are not signed.
 
 ## Environment overrides for tests
 

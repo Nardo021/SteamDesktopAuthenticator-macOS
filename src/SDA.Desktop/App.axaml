@@ -3,8 +3,28 @@
              x:Class="SDA.Desktop.App"
              Name="Steam Desktop Authenticator"
              RequestedThemeVariant="Default">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="SdaErrorBrush">#B00020</SolidColorBrush>
+                    <SolidColorBrush x:Key="SdaImageOutline">#6B6B6B</SolidColorBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="SdaErrorBrush">#FF8A80</SolidColorBrush>
+                    <SolidColorBrush x:Key="SdaImageOutline">#9A9A9A</SolidColorBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
     <Application.Styles>
         <FluentTheme />
+        <Style Selector="Window.sdaDialog">
+            <Setter Property="SizeToContent" Value="Height" />
+            <Setter Property="MaxHeight" Value="720" />
+            <Setter Property="CanResize" Value="True" />
+            <Setter Property="WindowStartupLocation" Value="CenterOwner" />
+        </Style>
     </Application.Styles>
     <!-- TrayIcon is created once in App.axaml.cs so the NativeMenu can be rebuilt when accounts change.
          TrayIcon.Clicked is intentionally unused: macOS opens the native menu instead. -->

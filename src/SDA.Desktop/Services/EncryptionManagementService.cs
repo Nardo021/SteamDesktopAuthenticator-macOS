@@ -52,12 +52,13 @@ namespace SDA.Desktop.Services
 
     public class EncryptionManagementService
     {
-        public const string PasskeysDoNotMatchMessage = "Passkeys do not match.";
-        public const string UnableToChangeMessage = "Unable to change passkey.";
-        public const string UnableToRemoveMessage = "Unable to remove passkey.";
-        public const string UnableToSetMessage = "Unable to set passkey.";
-        public const string WrongCurrentKeyMessage = "That passkey is invalid.";
+        public const string PasskeysDoNotMatchMessage = "Passkeys do not match. Enter the same new passkey in both fields.";
+        public const string UnableToChangeMessage = "Unable to change passkey. Check the current passkey and try again.";
+        public const string UnableToRemoveMessage = "Unable to remove passkey. Check the current passkey and try again.";
+        public const string UnableToSetMessage = "Unable to set passkey. Check the new passkey and try again.";
+        public const string WrongCurrentKeyMessage = "That passkey is incorrect. Enter the same encryption passkey used for your other accounts.";
         public const string EmptyManifestMessage = "Encryption cannot be changed while there are no accounts.";
+        public const string RequiredMessage = "Enter your encryption passkey.";
 
         public EncryptionManagementKind Inspect(string directory)
         {

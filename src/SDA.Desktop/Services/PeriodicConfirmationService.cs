@@ -44,6 +44,11 @@ namespace SDA.Desktop.Services
         public const string SessionExpiredStatusSuffix = " has expired. Use Login Again.";
         public const string AutoConfirmFailedStatus = "Unable to auto-confirm some confirmations.";
 
+        public static string FormatSessionExpired(string accountName)
+        {
+            return SessionExpiredStatusPrefix + (accountName ?? "") + SessionExpiredStatusSuffix;
+        }
+
         private readonly ConfirmationService _confirmations;
         private readonly IConfirmationClient _client;
         private readonly Func<PeriodicPollSnapshot> _snapshot;
@@ -261,7 +266,7 @@ namespace SDA.Desktop.Services
 
             if (first)
             {
-                RaiseStatus(SessionExpiredStatusPrefix + name + SessionExpiredStatusSuffix);
+                RaiseStatus(FormatSessionExpired(name));
             }
         }
 

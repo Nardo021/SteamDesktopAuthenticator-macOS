@@ -38,6 +38,11 @@ namespace SDA.Desktop.Services
 
     public sealed class AccountService
     {
+        public const string UnableToLoadMessage = "Unable to load maFiles. Choose a maFiles folder or set up an account.";
+        public const string NoAccountsMessage = "No accounts yet. Set up a new account, import a maFile, or open a maFiles folder.";
+        public const string UnableToDecryptMessage = "Unable to decrypt accounts. Check the encryption passkey and try again.";
+        public const string InvalidManifestMessage = "Invalid manifest";
+
         public bool LooksLikeMaFilesFolder(string directory)
         {
             if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
@@ -57,7 +62,7 @@ namespace SDA.Desktop.Services
         {
             if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
             {
-                return Unable("Unable to load maFiles");
+                return Unable(UnableToLoadMessage);
             }
 
             string manifestPath = Path.Combine(directory, "manifest.json");
@@ -65,10 +70,10 @@ namespace SDA.Desktop.Services
             {
                 if (Directory.EnumerateFiles(directory, "*.maFile").Any())
                 {
-                    return new MaFilesLoadResult(MaFilesLoadKind.InvalidManifest, new SteamGuardAccount[0], "Invalid manifest", false);
+                    return new MaFilesLoadResult(MaFilesLoadKind.InvalidManifest, new SteamGuardAccount[0], InvalidManifestMessage, false);
                 }
 
-                return new MaFilesLoadResult(MaFilesLoadKind.NoAccounts, new SteamGuardAccount[0], "No accounts found", false);
+                return new MaFilesLoadResult(MaFilesLoadKind.NoAccounts, new SteamGuardAccount[0], NoAccountsMessage, false);
             }
 
             try
@@ -80,20 +85,20 @@ namespace SDA.Desktop.Services
                     case AccountLoadStatus.PasswordRequired:
                         return new MaFilesLoadResult(MaFilesLoadKind.PasswordRequired, new SteamGuardAccount[0], "", true);
                     case AccountLoadStatus.InvalidPassword:
-                        return new MaFilesLoadResult(MaFilesLoadKind.InvalidPassword, new SteamGuardAccount[0], "Unable to decrypt accounts", true);
+                        return new MaFilesLoadResult(MaFilesLoadKind.InvalidPassword, new SteamGuardAccount[0], UnableToDecryptMessage, true);
                     case AccountLoadStatus.NoAccounts:
-                        return new MaFilesLoadResult(MaFilesLoadKind.NoAccounts, new SteamGuardAccount[0], "No accounts found", true);
+                        return new MaFilesLoadResult(MaFilesLoadKind.NoAccounts, new SteamGuardAccount[0], NoAccountsMessage, true);
                     default:
                         return new MaFilesLoadResult(MaFilesLoadKind.Success, loaded.Accounts, "", true);
                 }
             }
             catch (ManifestParseException)
             {
-                return new MaFilesLoadResult(MaFilesLoadKind.InvalidManifest, new SteamGuardAccount[0], "Invalid manifest", false);
+                return new MaFilesLoadResult(MaFilesLoadKind.InvalidManifest, new SteamGuardAccount[0], InvalidManifestMessage, false);
             }
             catch (Exception)
             {
-                return Unable("Unable to load maFiles");
+                return Unable(UnableToLoadMessage);
             }
         }
 

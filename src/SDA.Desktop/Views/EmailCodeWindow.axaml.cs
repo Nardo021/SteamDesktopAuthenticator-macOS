@@ -1,10 +1,14 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using System;
 
 namespace SDA.Desktop.Views
 {
     public partial class EmailCodeWindow : Window
     {
+        public const string PromptMessage = "Enter the code sent to your email.";
+        public const string InvalidPromptMessage = "That code is incorrect. Enter the code sent to your email.";
+
         public EmailCodeWindow()
             : this(false)
         {
@@ -15,11 +19,17 @@ namespace SDA.Desktop.Views
             InitializeComponent();
             if (previousCodeWasIncorrect)
             {
-                PromptText.Text = "The code you provided was invalid. Enter the code sent to your email:";
+                PromptText.Text = InvalidPromptMessage;
             }
         }
 
         public string Code { get; private set; }
+
+        protected override void OnOpened(EventArgs e)
+        {
+            base.OnOpened(e);
+            CodeBox.Focus();
+        }
 
         public void Clear()
         {
@@ -31,6 +41,8 @@ namespace SDA.Desktop.Views
         {
             if (string.IsNullOrEmpty(CodeBox.Text))
             {
+                ErrorText.Text = PromptMessage;
+                CodeBox.Focus();
                 return;
             }
 

@@ -1,13 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.MessageWindow"
+        Classes="sdaDialog"
         Title="Steam Desktop Authenticator"
         Width="460"
-        Height="220"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="160">
     <StackPanel Margin="20" Spacing="14">
-        <TextBlock x:Name="MessageText" TextWrapping="Wrap" />
+        <TextBlock x:Name="MessageText" TextWrapping="Wrap" LineHeight="21" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="OK" MinWidth="88" IsDefault="True" IsCancel="True" Click="OnOkClick" />
         </StackPanel>

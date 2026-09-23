@@ -72,7 +72,7 @@ namespace SDA.Desktop.Services
 
         public const string SessionExpiredMessage = "Your session has expired. Use Login Again under Selected Account.";
         public const string ConfirmationMismatchMessage = "Confirmation codes do not match. Steam Guard not removed.";
-        public const string RemoteFailedMessage = "Steam Guard failed to deactivate.";
+        public const string RemoteFailedMessage = "Steam Guard could not be deactivated. Check the connection and try again.";
         public const string LocalCleanupFailedMessage = "Steam authenticator deactivation succeeded, but SDA could not fully remove the local maFile.";
         public const string CancelledMessage = "Steam Guard was not removed. No action was taken.";
 
@@ -153,10 +153,10 @@ namespace SDA.Desktop.Services
         {
             if (scheme == RemoveCompletelyScheme)
             {
-                return "Steam Guard was removed completely. The local maFile will be deleted when you continue. If you need a backup, make it now.";
+                return "Steam Guard was removed completely. The local maFile will be deleted when you close this message. If you need a backup, make it now.";
             }
 
-            return "Steam Guard was switched to email authentication. The local maFile will be deleted when you continue. If you need a backup, make it now.";
+            return "Steam Guard was switched to email authentication. The local maFile will be deleted when you close this message. If you need a backup, make it now.";
         }
 
         public async Task<DeactivationResult> DeactivateRemoteAsync(

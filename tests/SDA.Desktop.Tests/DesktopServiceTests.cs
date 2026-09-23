@@ -156,7 +156,7 @@ namespace SDA.Desktop.Tests
             MaFilesLoadResult result = new AccountService().Load(directory, null);
 
             Assert.Equal(MaFilesLoadKind.NoAccounts, result.Kind);
-            Assert.Equal("No accounts found", result.StatusText);
+            Assert.Equal(AccountService.NoAccountsMessage, result.StatusText);
             Assert.False(File.Exists(Path.Combine(directory, "manifest.json")));
         }
 
@@ -273,7 +273,7 @@ namespace SDA.Desktop.Tests
 
             await harness.ViewModel.LoadDirectoryAsync(directory, false);
 
-            Assert.Equal("Unable to decrypt accounts", harness.ViewModel.StatusText);
+            Assert.Equal(AccountService.UnableToDecryptMessage, harness.ViewModel.StatusText);
             Assert.Null(harness.ViewModel.SelectedAccount);
             Assert.False(harness.ViewModel.CanCopyCode);
             Assert.Equal("—", harness.ViewModel.CurrentCode);
@@ -302,6 +302,41 @@ namespace SDA.Desktop.Tests
             Assert.DoesNotContain("fixture-pass", saved);
             Assert.Equal("fixture_user", restarted.ViewModel.SelectedAccount.DisplayName);
             Assert.False(File.Exists(Path.Combine(untouchedDefault, "manifest.json")));
+        }
+
+        [Fact]
+        public void MaFilesDirectoryPolicy_UsesExistingSavedDirectory()
+        {
+            string saved = NewDirectory();
+            Directory.CreateDirectory(saved);
+
+            Assert.Equal(saved, MaFilesDirectoryPolicy.ResolveStartupDirectory(saved, Path.Combine(_root, "default-maFiles")));
+        }
+
+        [Fact]
+        public void MaFilesDirectoryPolicy_FallsBackWhenSavedMissingOrEmpty()
+        {
+            string fallback = Path.Combine(_root, "default-maFiles");
+
+            Assert.Equal(fallback, MaFilesDirectoryPolicy.ResolveStartupDirectory("", fallback));
+            Assert.Equal(fallback, MaFilesDirectoryPolicy.ResolveStartupDirectory(Path.Combine(_root, "gone-maFiles"), fallback));
+        }
+
+        [Fact]
+        public async Task ViewModel_MissingSavedDirectoryUsesDefault()
+        {
+            string defaultDirectory = Path.Combine(_root, "default-maFiles");
+            Directory.CreateDirectory(defaultDirectory);
+            string settingsPath = Path.Combine(_root, "settings.json");
+            string missing = Path.Combine(_root, "missing-maFiles");
+            new SettingsService(settingsPath).Save(new AppSettings { MaFilesDirectory = missing });
+
+            Harness harness = CreateHarness(settingsPath, defaultDirectory);
+            await harness.ViewModel.InitializeAsync();
+
+            Assert.Empty(harness.ViewModel.Accounts);
+            Assert.Equal(AccountService.NoAccountsMessage, harness.ViewModel.StatusText);
+            Assert.Equal(missing, new SettingsService(settingsPath).Load().MaFilesDirectory);
         }
 
         [Fact]

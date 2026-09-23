@@ -185,7 +185,7 @@ namespace SDA.Desktop.Tests
             ConfirmationsWindowViewModel emptyVm = CreateWindow(account, new RecordingClient { Next = new Confirmation[0] });
             await emptyVm.RefreshAsync();
             Assert.Equal(ConfirmationUiState.Empty, emptyVm.State);
-            Assert.Equal("Nothing to confirm/cancel", emptyVm.StatusText);
+            Assert.Equal(ConfirmationService.EmptyMessage, emptyVm.StatusText);
             Assert.Empty(emptyVm.Confirmations);
 
             SteamGuardAccount expired = LoadPlainAccount();

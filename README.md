@@ -113,7 +113,7 @@ dotnet run --project src/SDA.Desktop/SDA.Desktop.csproj
 
 ## Release build
 
-Unsigned packaging (the v1.0.0 path) does not require Apple credentials:
+Unsigned packaging does not require Apple credentials:
 
 ```bash
 ./packaging/macos/package.sh
@@ -128,7 +128,7 @@ dotnet publish src/SDA.Desktop/SDA.Desktop.csproj -c Release -r osx-arm64 --self
 dotnet publish src/SDA.Desktop/SDA.Desktop.csproj -c Release -r osx-x64 --self-contained true -p:UseAppHost=true
 ```
 
-Developer ID signing and notarization scripts exist in `packaging/macos/` for a possible later release. They are optional and are **not** used for v1.0.0.
+Developer ID signing and notarization scripts exist in `packaging/macos/` for a possible later release. They are optional and are **not** used for unsigned public releases.
 
 ## Where maFiles are stored
 
@@ -160,6 +160,7 @@ Default:
 ## Documentation
 
 - [Release status](docs/release-status.md)
+- [v1.0.1 release notes](docs/releases/v1.0.1.md)
 - [v1.0.0 release notes](docs/releases/v1.0.0.md)
 - [Parity audit](docs/parity-audit.md)
 - [Windows → macOS migration](docs/macos-migration.md)

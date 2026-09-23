@@ -1,49 +1,61 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.SettingsWindow"
+        Classes="sdaDialog"
         Title="Settings"
         Width="420"
-        Height="360"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="280">
     <DockPanel Margin="20">
         <StackPanel DockPanel.Dock="Bottom" Spacing="8">
-            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding StatusText}"
+                       TextWrapping="Wrap"
+                       LineHeight="21"
+                       AutomationProperties.LiveSetting="Polite" />
             <Button Content="Save"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsDefault="True"
                     Click="OnSaveClick" />
         </StackPanel>
-        <StackPanel Spacing="12">
-            <CheckBox x:Name="PeriodicCheck"
-                      Content="Periodically check for new confirmations&#x0a;and show a popup when they arrive"
-                      IsChecked="{Binding PeriodicChecking}" />
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <NumericUpDown x:Name="IntervalBox"
-                               Minimum="5"
-                               Maximum="86400"
-                               Increment="1"
-                               FormatString="0"
-                               Width="72"
-                               IsEnabled="{Binding DependentsEnabled}" />
-                <TextBlock Text="Seconds between checking&#x0a;for confirmations"
-                           VerticalAlignment="Center" />
+        <StackPanel Spacing="16">
+            <StackPanel Spacing="8">
+                <CheckBox x:Name="PeriodicCheck"
+                          IsChecked="{Binding PeriodicChecking}">
+                    <TextBlock Text="Periodically check for new confirmations and show a popup when they arrive"
+                               TextWrapping="Wrap"
+                               LineHeight="21" />
+                </CheckBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <NumericUpDown x:Name="IntervalBox"
+                                   Minimum="5"
+                                   Maximum="86400"
+                                   Increment="1"
+                                   FormatString="0"
+                                   Width="72"
+                                   IsEnabled="{Binding DependentsEnabled}"
+                                   AutomationProperties.Name="Seconds between checking for confirmations" />
+                    <TextBlock Text="Seconds between checking for confirmations"
+                               TextWrapping="Wrap"
+                               LineHeight="21"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <CheckBox x:Name="CheckAllBox"
+                          Content="Check all accounts for confirmations"
+                          IsChecked="{Binding CheckAllAccounts}"
+                          IsEnabled="{Binding DependentsEnabled}" />
             </StackPanel>
-            <CheckBox x:Name="CheckAllBox"
-                      Content="Check all accounts for confirmations"
-                      IsChecked="{Binding CheckAllAccounts}"
-                      IsEnabled="{Binding DependentsEnabled}" />
-            <CheckBox x:Name="MarketBox"
-                      Content="Auto-confirm market transactions"
-                      IsChecked="{Binding AutoConfirmMarketTransactions, Mode=OneWay}"
-                      IsEnabled="{Binding DependentsEnabled}"
-                      Click="OnMarketClick" />
-            <CheckBox x:Name="TradesBox"
-                      Content="Auto-confirm trades"
-                      IsChecked="{Binding AutoConfirmTrades, Mode=OneWay}"
-                      IsEnabled="{Binding DependentsEnabled}"
-                      Click="OnTradesClick" />
+            <StackPanel Spacing="8">
+                <CheckBox x:Name="MarketBox"
+                          Content="Auto-confirm market transactions"
+                          IsChecked="{Binding AutoConfirmMarketTransactions, Mode=OneWay}"
+                          IsEnabled="{Binding DependentsEnabled}"
+                          Click="OnMarketClick" />
+                <CheckBox x:Name="TradesBox"
+                          Content="Auto-confirm trades"
+                          IsChecked="{Binding AutoConfirmTrades, Mode=OneWay}"
+                          IsEnabled="{Binding DependentsEnabled}"
+                          Click="OnTradesClick" />
+            </StackPanel>
         </StackPanel>
     </DockPanel>
 </Window>

@@ -1,5 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using SDA.Desktop.Services;
+using System;
 
 namespace SDA.Desktop.Views
 {
@@ -21,6 +23,12 @@ namespace SDA.Desktop.Views
 
         public string Code { get; private set; }
 
+        protected override void OnOpened(EventArgs e)
+        {
+            base.OnOpened(e);
+            CodeBox.Focus();
+        }
+
         public void Clear()
         {
             Code = null;
@@ -31,6 +39,8 @@ namespace SDA.Desktop.Views
         {
             if (string.IsNullOrEmpty(CodeBox.Text))
             {
+                ErrorText.Text = AuthenticatorEnrollmentService.SmsCodePrompt;
+                CodeBox.Focus();
                 return;
             }
 

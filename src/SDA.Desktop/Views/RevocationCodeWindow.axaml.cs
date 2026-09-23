@@ -1,23 +1,23 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using SDA.Desktop.Services;
+using System;
 
 namespace SDA.Desktop.Views
 {
     public partial class RevocationCodeWindow : Window
     {
         private readonly bool _confirm;
-        private readonly string _expected;
 
         public RevocationCodeWindow()
-            : this("", false, null)
+            : this("", false)
         {
         }
 
-        public RevocationCodeWindow(string revocationCode, bool confirm, string expected)
+        public RevocationCodeWindow(string revocationCode, bool confirm)
         {
             InitializeComponent();
             _confirm = confirm;
-            _expected = expected ?? "";
             CodeBox.Text = revocationCode ?? "";
             if (confirm)
             {
@@ -30,11 +30,20 @@ namespace SDA.Desktop.Views
             }
             else
             {
-                PromptText.Text = "IMPORTANT. Save this revocation code somewhere safe:";
+                PromptText.Text = AuthenticatorEnrollmentService.RevocationSavePrompt;
             }
         }
 
         public string EnteredCode { get; private set; }
+
+        protected override void OnOpened(EventArgs e)
+        {
+            base.OnOpened(e);
+            if (_confirm)
+            {
+                ConfirmBox.Focus();
+            }
+        }
 
         private void OnContinueClick(object sender, RoutedEventArgs e)
         {

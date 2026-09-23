@@ -27,7 +27,7 @@ namespace SDA.Desktop.ViewModels
             AccountName = accountName ?? "";
             Title = import ? "Import Account" : "Login Again";
             SessionHint = import
-                ? "Sign in so this imported account can be saved with a current Steam session."
+                ? "Log in so this imported account can be saved with a current Steam session."
                 : "Your Steam session will be renewed.";
         }
 
@@ -106,7 +106,7 @@ namespace SDA.Desktop.ViewModels
         public void MarkFailed(string status)
         {
             State = LoginUiState.Failure;
-            StatusText = string.IsNullOrEmpty(status) ? "Steam login failed." : status;
+            StatusText = string.IsNullOrEmpty(status) ? "Steam login failed. Check the password and try again." : status;
         }
 
         public void MarkCancelled()

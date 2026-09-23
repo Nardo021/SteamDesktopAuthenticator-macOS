@@ -76,7 +76,7 @@ namespace SDA.Desktop.Services
 
         public static ConfirmationLoadResult Empty(bool sessionWasRefreshed)
         {
-            return new ConfirmationLoadResult(ConfirmationLoadStatus.Empty, new Confirmation[0], "Nothing to confirm/cancel", sessionWasRefreshed);
+            return new ConfirmationLoadResult(ConfirmationLoadStatus.Empty, new Confirmation[0], ConfirmationService.EmptyMessage, sessionWasRefreshed);
         }
 
         public static ConfirmationLoadResult SessionExpired()
@@ -84,7 +84,7 @@ namespace SDA.Desktop.Services
             return new ConfirmationLoadResult(
                 ConfirmationLoadStatus.SessionExpired,
                 new Confirmation[0],
-                "Your session has expired. Use Login Again under Selected Account.",
+                ConfirmationService.SessionExpiredMessage,
                 false);
         }
 
@@ -102,7 +102,7 @@ namespace SDA.Desktop.Services
     {
         public const string SessionExpiredMessage = "Your session has expired. Use Login Again under Selected Account.";
         public const string ForceRefreshMessage = "Steam needs a refreshed session. Use Force Session Refresh under Selected Account.";
-        public const string EmptyMessage = "Nothing to confirm/cancel";
+        public const string EmptyMessage = "No confirmations right now.";
 
         private readonly IConfirmationClient _client;
         private readonly SessionRefreshService _refresh;

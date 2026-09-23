@@ -1,17 +1,25 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.PhoneInputWindow"
+        Classes="sdaDialog"
         Title="Phone Number"
         Width="420"
-        Height="260"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="220">
     <StackPanel Margin="20" Spacing="10">
         <TextBlock Text="Phone Number" />
-        <TextBox x:Name="PhoneBox" PlaceholderText="+61 4XXXXXXXX" />
+        <TextBox x:Name="PhoneBox"
+                 PlaceholderText="+61 4XXXXXXXX"
+                 AutomationProperties.Name="Phone Number" />
         <TextBlock Text="Country Code" />
-        <TextBox x:Name="CountryBox" PlaceholderText="AU" />
-        <TextBlock x:Name="ErrorText" TextWrapping="Wrap" MinHeight="20" />
+        <TextBox x:Name="CountryBox"
+                 PlaceholderText="AU"
+                 AutomationProperties.Name="Country Code" />
+        <TextBlock x:Name="ErrorText"
+                   Foreground="{DynamicResource SdaErrorBrush}"
+                   TextWrapping="Wrap"
+                   LineHeight="21"
+                   MinHeight="20"
+                   AutomationProperties.LiveSetting="Assertive" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
             <Button Content="Continue" MinWidth="88" IsDefault="True" Click="OnContinueClick" />

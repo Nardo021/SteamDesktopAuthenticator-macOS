@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using SDA.Desktop.Services;
 using System;
 
 namespace SDA.Desktop.Views
@@ -22,13 +23,14 @@ namespace SDA.Desktop.Views
         public void SetError(string message)
         {
             ErrorText.Text = message ?? "";
+            PasswordBox.Focus();
         }
 
         private void OnUnlockClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(PasswordBox.Text))
             {
-                ErrorText.Text = "Encryption password is required.";
+                SetError(EncryptionManagementService.RequiredMessage);
                 return;
             }
 

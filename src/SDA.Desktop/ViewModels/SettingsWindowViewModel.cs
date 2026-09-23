@@ -7,7 +7,7 @@ namespace SDA.Desktop.ViewModels
     public sealed class SettingsWindowViewModel : INotifyPropertyChanged
     {
         public const string AutoConfirmWarning =
-            "Warning: enabling this will severely reduce the security of your items! Use of this option is at your own risk. Would you like to continue?";
+            "Enabling this lowers the security of your Steam items. SDA will accept matching confirmations without asking you.";
 
         private readonly ManifestSettingsService _settings;
         private readonly string _directory;

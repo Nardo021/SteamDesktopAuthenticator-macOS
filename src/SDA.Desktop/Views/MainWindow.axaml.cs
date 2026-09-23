@@ -225,7 +225,7 @@ namespace SDA.Desktop.Views
             await _viewModel.CopyAsync();
         }
 
-        private async void OnVersionPressed(object sender, PointerPressedEventArgs e)
+        private async void OnVersionClick(object sender, RoutedEventArgs e)
         {
             await CheckForUpdatesAsync(true);
         }
@@ -269,7 +269,7 @@ namespace SDA.Desktop.Views
                 {
                     MessageWindow message = new MessageWindow(
                         "Steam Desktop Authenticator",
-                        "Failed to check for updates.");
+                        "Failed to check for updates. Check the connection and try again.");
                     await message.ShowDialog(this);
                 }
             }
@@ -279,7 +279,7 @@ namespace SDA.Desktop.Views
                 {
                     MessageWindow message = new MessageWindow(
                         "Steam Desktop Authenticator",
-                        "Failed to check for updates.");
+                        "Failed to check for updates. Check the connection and try again.");
                     await message.ShowDialog(this);
                 }
             }
@@ -305,7 +305,7 @@ namespace SDA.Desktop.Views
             }
             catch (Exception)
             {
-                _viewModel.SetFailureStatus("Steam login failed.");
+                _viewModel.SetFailureStatus("Steam login failed. Check the password and try again.");
             }
             finally
             {
@@ -357,7 +357,7 @@ namespace SDA.Desktop.Views
             }
             catch (Exception)
             {
-                _viewModel.SetFailureStatus("Unable to set up a new account.");
+                _viewModel.SetFailureStatus("Unable to set up a new account. Check the Steam login and try again.");
             }
         }
 
@@ -394,7 +394,7 @@ namespace SDA.Desktop.Views
             }
             catch (Exception)
             {
-                _viewModel.SetFailureStatus("Unable to refresh session.");
+                _viewModel.SetFailureStatus("Unable to refresh session. Check the connection and try again.");
             }
         }
 
@@ -449,7 +449,7 @@ namespace SDA.Desktop.Views
             }
             catch (Exception)
             {
-                _viewModel.SetFailureStatus("Unable to import account.");
+                _viewModel.SetFailureStatus("Unable to import account. Check the maFile and try again.");
             }
         }
 
@@ -688,6 +688,11 @@ namespace SDA.Desktop.Views
 
         private async void OnKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Source is TextBox)
+            {
+                return;
+            }
+
             if (e.Key == Key.C && (e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Meta)))
             {
                 await _viewModel.CopyAsync();
@@ -702,11 +707,6 @@ namespace SDA.Desktop.Views
             {
                 e.Handled = true;
                 await _viewModel.TryMoveSelectedAsync(direction);
-                return;
-            }
-
-            if (e.Source is TextBox)
-            {
                 return;
             }
 

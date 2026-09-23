@@ -1,18 +1,23 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.SetupAccountWindow"
+        Classes="sdaDialog"
         Title="Setup New Account"
         Width="460"
-        Height="340"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="220">
     <Grid Margin="20">
         <StackPanel Spacing="10" IsVisible="{Binding IsLoginVisible}">
             <TextBlock Text="Steam username" />
-            <TextBox Text="{Binding Username}" />
+            <TextBox Text="{Binding Username}" AutomationProperties.Name="Steam username" />
             <TextBlock Text="Steam password" />
-            <TextBox x:Name="PasswordBox" PasswordChar="*" />
-            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
+            <TextBox x:Name="PasswordBox"
+                     PasswordChar="*"
+                     AutomationProperties.Name="Steam password" />
+            <TextBlock Text="{Binding StatusText}"
+                       TextWrapping="Wrap"
+                       LineHeight="21"
+                       MinHeight="20"
+                       AutomationProperties.LiveSetting="Assertive" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
                 <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
                 <Button Content="{Binding LoginButtonText}"
@@ -24,54 +29,67 @@
         </StackPanel>
 
         <StackPanel Spacing="10" IsVisible="{Binding IsConfirmContinueVisible}">
-            <TextBlock Text="Steam account login succeeded. Continue adding Steam Desktop Authenticator as the mobile authenticator for this account?" TextWrapping="Wrap" />
+            <TextBlock Text="Steam account login succeeded. Continue adding Steam Desktop Authenticator as the mobile authenticator for this account?"
+                       TextWrapping="Wrap"
+                       LineHeight="21" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                <Button Content="Cancel" MinWidth="88" Click="OnDeclineContinueClick" />
-                <Button Content="Continue" MinWidth="88" Click="OnContinueClick" />
+                <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnDeclineContinueClick" />
+                <Button Content="Continue" MinWidth="88" IsDefault="True" Click="OnContinueClick" />
             </StackPanel>
         </StackPanel>
 
         <StackPanel Spacing="10" IsVisible="{Binding IsBusyVisible}">
-            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" LineHeight="21" />
         </StackPanel>
 
         <StackPanel Spacing="10" IsVisible="{Binding IsEmailVisible}">
-            <TextBlock Text="{Binding EmailPrompt}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding EmailPrompt}" TextWrapping="Wrap" LineHeight="21" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                <Button Content="Cancel" MinWidth="88" Click="OnCancelClick" />
-                <Button Content="I've Confirmed" MinWidth="120" Click="OnEmailConfirmedClick" />
+                <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+                <Button Content="Continue" MinWidth="120" IsDefault="True" Click="OnEmailConfirmedClick" />
             </StackPanel>
         </StackPanel>
 
         <StackPanel Spacing="10" IsVisible="{Binding IsNewPasskeyVisible}">
             <TextBlock Text="Encryption passkey" />
-            <TextBox x:Name="NewPasskeyBox" PasswordChar="*" />
-            <TextBlock Text="Leave blank to store the maFile without SDA encryption." TextWrapping="Wrap" />
+            <TextBox x:Name="NewPasskeyBox"
+                     PasswordChar="*"
+                     AutomationProperties.Name="Encryption passkey" />
+            <TextBlock Text="Leave blank to store the maFile without SDA encryption."
+                       TextWrapping="Wrap"
+                       LineHeight="21" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                <Button Content="Cancel" MinWidth="88" Click="OnCancelClick" />
-                <Button Content="Continue" MinWidth="88" Click="OnNewPasskeyClick" />
+                <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+                <Button Content="Continue" MinWidth="88" IsDefault="True" Click="OnNewPasskeyClick" />
             </StackPanel>
         </StackPanel>
 
         <StackPanel Spacing="10" IsVisible="{Binding IsExistingPasskeyVisible}">
-            <TextBlock Text="Please enter your current encryption passkey." TextWrapping="Wrap" />
-            <TextBox x:Name="ExistingPasskeyBox" PasswordChar="*" />
-            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
+            <TextBlock Text="Please enter your current encryption passkey." TextWrapping="Wrap" LineHeight="21" />
+            <TextBox x:Name="ExistingPasskeyBox"
+                     PasswordChar="*"
+                     AutomationProperties.Name="Current encryption passkey" />
+            <TextBlock Text="{Binding StatusText}"
+                       TextWrapping="Wrap"
+                       LineHeight="21"
+                       MinHeight="20"
+                       AutomationProperties.LiveSetting="Assertive" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-                <Button Content="Cancel" MinWidth="88" Click="OnCancelClick" />
-                <Button Content="Continue" MinWidth="88" Click="OnExistingPasskeyClick" />
+                <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
+                <Button Content="Continue" MinWidth="88" IsDefault="True" Click="OnExistingPasskeyClick" />
             </StackPanel>
         </StackPanel>
 
         <StackPanel Spacing="10" IsVisible="{Binding IsFinishedVisible}">
-            <TextBlock Text="{Binding FinishedTitle}" TextWrapping="Wrap" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding FinishedTitle}" TextWrapping="Wrap" LineHeight="21" FontWeight="SemiBold" />
             <TextBox Text="{Binding FinishedDetail}"
                      IsReadOnly="True"
                      IsVisible="{Binding FinishedDetail, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                      FontFamily="Menlo, Consolas, monospace"
-                     FontSize="20" />
+                     FontSize="20"
+                     AutomationProperties.Name="Revocation code" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Close" MinWidth="88" Click="OnCloseFinishedClick" />
+                <Button Content="Done" MinWidth="88" IsDefault="True" Click="OnCloseFinishedClick" />
             </StackPanel>
         </StackPanel>
     </Grid>

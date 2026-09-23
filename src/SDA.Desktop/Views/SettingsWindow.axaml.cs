@@ -44,10 +44,10 @@ namespace SDA.Desktop.Views
             if (desired && _viewModel.NeedsAutoConfirmWarning(true, previous))
             {
                 ConfirmWindow confirm = new ConfirmWindow(
-                    "Warning!",
+                    "Auto-confirm",
                     SettingsWindowViewModel.AutoConfirmWarning,
-                    "Yes",
-                    "No");
+                    "Enable auto-confirm",
+                    "Cancel");
                 if (!await confirm.ShowDialog<bool>(this))
                 {
                     box.IsChecked = false;

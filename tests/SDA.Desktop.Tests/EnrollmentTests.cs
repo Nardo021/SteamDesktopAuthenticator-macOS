@@ -426,6 +426,24 @@ namespace SDA.Desktop.Tests
             Assert.True(main.SelectedAccount.Account.FullyEnrolled);
         }
 
+        [Fact]
+        public void RevocationMatches_IsCaseInsensitiveOnBothSides()
+        {
+            Assert.True(AuthenticatorEnrollmentService.RevocationMatches("r00000", "R00000"));
+            Assert.True(AuthenticatorEnrollmentService.RevocationMatches("R00000", "r00000"));
+            Assert.False(AuthenticatorEnrollmentService.RevocationMatches("R00001", "R00000"));
+            Assert.False(AuthenticatorEnrollmentService.RevocationMatches("R00000", null));
+            Assert.False(AuthenticatorEnrollmentService.RevocationMatches("R00000", ""));
+        }
+
+        [Fact]
+        public void ValidatePhone_ReportsTheFailingField()
+        {
+            Assert.Equal(PhoneValidationField.Phone, AuthenticatorEnrollmentService.ValidatePhone("0412345678", "AU").Field);
+            Assert.Equal(PhoneValidationField.Country, AuthenticatorEnrollmentService.ValidatePhone("+61412345678", "A1").Field);
+            Assert.Equal(PhoneValidationField.None, AuthenticatorEnrollmentService.ValidatePhone("+61412345678", "AU").Field);
+        }
+
         private async Task EnrollThroughSave(string directory, string currentKey, Action<RecordingLinker> configure, Func<SetupAccountWindowViewModel, Task> afterAdd)
         {
             RecordingLinker linker = AwaitingLinker();

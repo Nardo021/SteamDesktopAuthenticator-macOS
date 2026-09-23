@@ -37,7 +37,7 @@ namespace SDA.Desktop.ViewModels
 
     public sealed class TrayMenuViewModel
     {
-        public const string NoAccountsText = "No accounts";
+        public const string NoAccountsText = "No accounts yet";
 
         private readonly ITrayMenuActions _actions;
         private MainWindowViewModel _source;

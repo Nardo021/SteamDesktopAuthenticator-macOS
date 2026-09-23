@@ -196,7 +196,7 @@ namespace SDA.Desktop.Views
 
         private async Task PromptRevocationDisplayAsync()
         {
-            RevocationCodeWindow window = new RevocationCodeWindow(_viewModel.RevocationCode, false, null);
+            RevocationCodeWindow window = new RevocationCodeWindow(_viewModel.RevocationCode, false);
             bool continued = await window.ShowDialog<bool>(this);
             if (!continued)
             {
@@ -210,7 +210,7 @@ namespace SDA.Desktop.Views
 
         private async Task PromptRevocationConfirmAsync()
         {
-            RevocationCodeWindow window = new RevocationCodeWindow(_viewModel.RevocationCode, true, _viewModel.RevocationCode);
+            RevocationCodeWindow window = new RevocationCodeWindow(_viewModel.RevocationCode, true);
             bool submitted = await window.ShowDialog<bool>(this);
             if (!submitted)
             {

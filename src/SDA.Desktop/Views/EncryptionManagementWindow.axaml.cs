@@ -43,6 +43,7 @@ namespace SDA.Desktop.Views
             string current = CurrentBox == null ? null : CurrentBox.Text;
             string next = NewBox.Text;
             string confirm = ConfirmBox.Text;
+            EncryptionChangeStatus? errorStatus = null;
             try
             {
                 EncryptionChangeResult result = _encryption.Change(_directory, current, next, confirm);
@@ -54,10 +55,12 @@ namespace SDA.Desktop.Views
                 }
 
                 _viewModel.StatusText = result.Message;
+                errorStatus = result.Status;
             }
             catch (Exception)
             {
                 _viewModel.StatusText = EncryptionManagementService.UnableToChangeMessage;
+                errorStatus = EncryptionChangeStatus.Failed;
             }
             finally
             {
@@ -70,11 +73,35 @@ namespace SDA.Desktop.Views
                 ConfirmBox.Text = "";
                 _viewModel.Busy = false;
             }
+
+            if (errorStatus != null)
+            {
+                FocusEncryptionError(errorStatus.Value);
+            }
         }
 
         private void OnCancelClick(object sender, RoutedEventArgs e)
         {
             Close(false);
+        }
+
+        private void FocusEncryptionError(EncryptionChangeStatus status)
+        {
+            switch (status)
+            {
+                case EncryptionChangeStatus.WrongCurrentKey:
+                    if (CurrentBox != null)
+                    {
+                        CurrentBox.Focus();
+                    }
+                    break;
+                case EncryptionChangeStatus.Mismatch:
+                    ConfirmBox.Focus();
+                    break;
+                default:
+                    NewBox.Focus();
+                    break;
+            }
         }
     }
 }

@@ -66,6 +66,8 @@ namespace SDA.Desktop.ViewModels
             _cliEncryptionKey = cliEncryptionKey;
         }
 
+        public const string ClockFailedMessage = "Unable to refresh the Steam Guard timer. Check the connection and try again.";
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public event EventHandler ManifestContextChanged;
@@ -194,30 +196,15 @@ namespace SDA.Desktop.ViewModels
             try
             {
                 AppSettings settings = _settings.Load();
-                string saved = settings.MaFilesDirectory;
-                string directory = _defaultMaFilesDirectory;
-                bool savedMissing = false;
-                if (!string.IsNullOrWhiteSpace(saved))
-                {
-                    if (Directory.Exists(saved))
-                    {
-                        directory = saved;
-                    }
-                    else
-                    {
-                        savedMissing = true;
-                    }
-                }
-
-                await LoadDirectoryAsync(directory, false);
-                if (savedMissing)
-                {
-                    SetBaseStatus("Unable to load maFiles");
-                }
+                await LoadDirectoryAsync(
+                    MaFilesDirectoryPolicy.ResolveStartupDirectory(
+                        settings.MaFilesDirectory,
+                        _defaultMaFilesDirectory),
+                    false);
             }
             catch (Exception)
             {
-                SetBaseStatus("Unable to load maFiles");
+                SetBaseStatus(AccountService.UnableToLoadMessage);
             }
         }
 
@@ -231,7 +218,7 @@ namespace SDA.Desktop.ViewModels
 
             if (!_accounts.LooksLikeMaFilesFolder(path))
             {
-                SetBaseStatus("Unable to load maFiles");
+                SetBaseStatus(AccountService.UnableToLoadMessage);
                 return;
             }
 
@@ -256,7 +243,7 @@ namespace SDA.Desktop.ViewModels
             {
                 if (string.IsNullOrEmpty(_baseStatus))
                 {
-                    SetBaseStatus("Unable to load maFiles");
+                    SetBaseStatus(ClockFailedMessage);
                 }
             }
             finally
@@ -567,14 +554,14 @@ namespace SDA.Desktop.ViewModels
             {
                 if (result.Kind == MaFilesLoadKind.InvalidPassword)
                 {
-                    error = "Incorrect password.";
+                    error = EncryptionManagementService.WrongCurrentKeyMessage;
                 }
 
                 string password = await _prompt.PromptAsync(error);
                 if (password == null)
                 {
                     _passKey = null;
-                    return new MaFilesLoadResult(MaFilesLoadKind.UnlockCancelled, new SteamAuth.SteamGuardAccount[0], "Unable to decrypt accounts", result.RememberDirectory);
+                    return new MaFilesLoadResult(MaFilesLoadKind.UnlockCancelled, new SteamAuth.SteamGuardAccount[0], AccountService.UnableToDecryptMessage, result.RememberDirectory);
                 }
 
                 _passKey = password;

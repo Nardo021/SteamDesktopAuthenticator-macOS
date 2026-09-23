@@ -13,14 +13,16 @@
         <TextBox x:Name="AccountSearchBox"
                  Grid.Row="1"
                  Margin="0,8,0,8"
-                 PlaceholderText="Search accounts"
+                 PlaceholderText="account name"
+                 AutomationProperties.Name="Search accounts"
                  Text="{Binding SearchText, Mode=TwoWay}" />
         <ComboBox Grid.Row="2"
                   Margin="0,8,0,16"
                   HorizontalAlignment="Stretch"
                   ItemsSource="{Binding Accounts}"
                   SelectedItem="{Binding SelectedAccount}"
-                  PlaceholderText="No accounts">
+                  PlaceholderText="No accounts yet"
+                  AutomationProperties.Name="Account">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding DisplayName}" />
@@ -34,8 +36,20 @@
                        FontSize="42"
                        FontWeight="SemiBold"
                        FontFamily="Menlo, Consolas, monospace"
-                       HorizontalAlignment="Center" />
-            <TextBlock Text="{Binding CountdownText}" HorizontalAlignment="Center" />
+                       HorizontalAlignment="Center"
+                       AutomationProperties.Name="Steam Guard Code">
+                <TextBlock.FontFeatures>
+                    <FontFeature Tag="tnum" />
+                </TextBlock.FontFeatures>
+            </TextBlock>
+            <TextBlock Text="{Binding CountdownText}"
+                       FontFamily="Menlo, Consolas, monospace"
+                       HorizontalAlignment="Center"
+                       AutomationProperties.Name="Code countdown">
+                <TextBlock.FontFeatures>
+                    <FontFeature Tag="tnum" />
+                </TextBlock.FontFeatures>
+            </TextBlock>
             <Button Content="Copy Code"
                     MinWidth="160"
                     HorizontalAlignment="Center"
@@ -47,19 +61,27 @@
         <Button Grid.Row="4"
                 Content="Open maFiles Folder"
                 HorizontalAlignment="Stretch"
-                Margin="0,8,0,16"
+                Margin="0,24,0,28"
                 Click="OnOpenFolderClick" />
         <Grid Grid.Row="5" ColumnDefinitions="*,Auto">
             <TextBlock Text="Status" FontWeight="SemiBold" />
-            <TextBlock Grid.Column="1"
-                       Text="{Binding VersionLabel}"
-                       Opacity="0.65"
-                       FontSize="11"
-                       PointerPressed="OnVersionPressed" />
+            <Button Grid.Column="1"
+                    Content="{Binding VersionLabel}"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Padding="4,2"
+                    FontSize="11"
+                    Opacity="0.65"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="Check for updates"
+                    Click="OnVersionClick" />
         </Grid>
         <TextBlock Grid.Row="6"
                    Margin="0,6,0,0"
                    Text="{Binding StatusText}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   LineHeight="21"
+                   AutomationProperties.LiveSetting="Polite" />
     </Grid>
 </Window>

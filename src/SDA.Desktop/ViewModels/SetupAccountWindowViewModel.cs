@@ -439,7 +439,7 @@ namespace SDA.Desktop.ViewModels
             }
 
             State = EnrollmentUiState.NeedSmsCode;
-            StatusText = "Please input the SMS code sent to your phone.";
+            StatusText = AuthenticatorEnrollmentService.SmsCodePrompt;
             await Task.CompletedTask;
         }
 
@@ -678,7 +678,7 @@ namespace SDA.Desktop.ViewModels
             _savedInitially = true;
             CaptureRevocation();
             State = EnrollmentUiState.ShowRevocationCode;
-            StatusText = "IMPORTANT. Save this revocation code somewhere safe:";
+            StatusText = AuthenticatorEnrollmentService.RevocationSavePrompt;
             await Task.CompletedTask;
         }
 

@@ -72,16 +72,16 @@ namespace SDA.Desktop.Services
 
     public class AccountImportService
     {
-        public const string DestinationEncryptedMessage = "You can't import an .maFile because the existing accounts in SDA are encrypted. Decrypt the current Manifest and try again.";
-        public const string InvalidMaFileMessage = "This file is not a valid SteamAuth maFile. Import Failed.";
-        public const string MissingAdjacentManifestMessage = "manifest.json is missing! Import Failed.";
-        public const string InvalidAdjacentManifestMessage = "Invalid content inside manifest.json! Import Failed.";
-        public const string EntryNotFoundMessage = "Account not found inside manifest.json. Import Failed.";
-        public const string MissingSaltAndIvMessage = "manifest.json does not contain encrypted data. Your account may be unencrypted! Import Failed.";
-        public const string MissingIvMessage = "manifest.json does not contain: encryption_iv Import Failed.";
-        public const string MissingSaltMessage = "manifest.json does not contain: encryption_salt Import Failed.";
-        public const string DecryptionFailedMessage = "Decryption Failed. Import Failed.";
-        public const string LoginFailedMessage = "Login failed. Try to import this account again.";
+        public const string DestinationEncryptedMessage = "Can't import a maFile while current accounts are encrypted. Remove encryption and try again.";
+        public const string InvalidMaFileMessage = "This file is not a valid SteamAuth maFile.";
+        public const string MissingAdjacentManifestMessage = "manifest.json is missing next to this maFile.";
+        public const string InvalidAdjacentManifestMessage = "The adjacent manifest.json is not valid.";
+        public const string EntryNotFoundMessage = "This account was not found in the adjacent manifest.json.";
+        public const string MissingSaltAndIvMessage = "manifest.json does not contain encrypted data. The maFile may be unencrypted.";
+        public const string MissingIvMessage = "manifest.json is missing encryption_iv.";
+        public const string MissingSaltMessage = "manifest.json is missing encryption_salt.";
+        public const string DecryptionFailedMessage = "Unable to decrypt this maFile. Check the encryption passkey and try again.";
+        public const string LoginFailedMessage = "Steam login failed. Import this account again after signing in.";
         public const string SuccessMessage = "Account Imported";
         public const string EncryptedSourceSuccessMessage = "Account Imported. Your Account is now Decrypted.";
 
@@ -346,7 +346,13 @@ namespace SDA.Desktop.Services
                 return new AccountImportReadResult(AccountImportStatus.DecryptionFailed, null, DecryptionFailedMessage);
             }
 
-            return ReadPlainAccount(decrypted);
+            AccountImportReadResult plain = ReadPlainAccount(decrypted);
+            if (plain.Status == AccountImportStatus.InvalidMaFile)
+            {
+                return new AccountImportReadResult(AccountImportStatus.DecryptionFailed, null, DecryptionFailedMessage);
+            }
+
+            return plain;
         }
 
         private static SteamGuardAccount DeserializeAccount(string json)

@@ -76,14 +76,22 @@ namespace SDA.Desktop.Services
         }
     }
 
+    public enum PhoneValidationField
+    {
+        None,
+        Phone,
+        Country
+    }
+
     public sealed class PhoneValidationResult
     {
-        public PhoneValidationResult(bool valid, string phoneNumber, string countryCode, string error)
+        public PhoneValidationResult(bool valid, string phoneNumber, string countryCode, string error, PhoneValidationField field)
         {
             Valid = valid;
             PhoneNumber = phoneNumber ?? "";
             CountryCode = countryCode ?? "";
             Error = error ?? "";
+            Field = field;
         }
 
         public bool Valid { get; }
@@ -93,15 +101,19 @@ namespace SDA.Desktop.Services
         public string CountryCode { get; }
 
         public string Error { get; }
+
+        public PhoneValidationField Field { get; }
     }
 
     public static class AuthenticatorEnrollmentService
     {
         public const string AlreadyLinkedMessage = LoginChallengeHandler.ExistingAuthenticatorRequiredMessage;
-        public const string EmailConfirmationMessage = "Please check your email and click the link Steam sent you before continuing.";
+        public const string EmailConfirmationMessage = "Check your email and open the link Steam sent you before continuing.";
+        public const string SmsCodePrompt = "Enter the SMS code sent to your phone.";
+        public const string RevocationSavePrompt = "Save this revocation code somewhere safe:";
         public const string PhoneAddFailedMessage = "Failed to add your phone number. Please try again or use a different phone number.";
         public const string AuthenticatorPresentMessage = "This account already has an authenticator linked. You must remove that authenticator before adding SDA.";
-        public const string GeneralLinkFailureMessage = "Error adding your authenticator.";
+        public const string GeneralLinkFailureMessage = "Unable to add the authenticator. Check the Steam login and try again.";
         public const string InitialSaveFailedMessage = "Unable to save mobile authenticator file. The authenticator has not been finalized.";
         public const string RevocationIncorrectMessage = "Revocation code incorrect. The authenticator has not been finalized.";
         public const string UnableToGenerateCodesMessage = "Steam Guard could not generate the expected codes and finalization could not be completed.";
@@ -118,20 +130,20 @@ namespace SDA.Desktop.Services
             string country = countryCode == null ? "" : countryCode.Trim().ToUpperInvariant();
             if (string.IsNullOrEmpty(filtered) || filtered[0] != '+')
             {
-                return new PhoneValidationResult(false, filtered, country, "Phone number must start with + and country code.");
+                return new PhoneValidationResult(false, filtered, country, "Phone number must start with + and country code.", PhoneValidationField.Phone);
             }
 
             if (DisallowedPhoneCharacters.IsMatch(filtered))
             {
-                return new PhoneValidationResult(false, filtered, country, "Phone number may only contain +, digits, and spaces.");
+                return new PhoneValidationResult(false, filtered, country, "Phone number may only contain +, digits, and spaces.", PhoneValidationField.Phone);
             }
 
             if (DisallowedCountryCharacters.IsMatch(country))
             {
-                return new PhoneValidationResult(false, filtered, country, "Country code may only contain letters.");
+                return new PhoneValidationResult(false, filtered, country, "Country code may only contain letters.", PhoneValidationField.Country);
             }
 
-            return new PhoneValidationResult(true, filtered, country, "");
+            return new PhoneValidationResult(true, filtered, country, "", PhoneValidationField.None);
         }
 
         public static string FilterPhoneNumber(string phoneNumber)
@@ -146,12 +158,15 @@ namespace SDA.Desktop.Services
 
         public static bool RevocationMatches(string entered, string expected)
         {
-            if (expected == null)
+            if (string.IsNullOrEmpty(expected))
             {
                 return false;
             }
 
-            return string.Equals(entered == null ? "" : entered.ToUpper(), expected, StringComparison.Ordinal);
+            return string.Equals(
+                entered == null ? "" : entered.ToUpperInvariant(),
+                expected.ToUpperInvariant(),
+                StringComparison.Ordinal);
         }
 
         public static void ApplyPhone(IAuthenticatorLinker linker, string phoneNumber, string countryCode)

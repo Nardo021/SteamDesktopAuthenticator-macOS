@@ -18,7 +18,11 @@
                     HorizontalContentAlignment="Center"
                     IsEnabled="{Binding CanRefresh}"
                     Click="OnRefreshClick" />
-            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
+            <TextBlock Text="{Binding StatusText}"
+                       TextWrapping="Wrap"
+                       LineHeight="21"
+                       MinHeight="20"
+                       AutomationProperties.LiveSetting="Polite" />
         </StackPanel>
         <ScrollViewer>
             <ItemsControl ItemsSource="{Binding Confirmations}" Margin="16,0,16,16">
@@ -27,18 +31,26 @@
                         <Border Margin="0,0,0,12"
                                 Padding="12"
                                 BorderThickness="1"
-                                BorderBrush="#404040"
-                                CornerRadius="4">
+                                BorderBrush="{DynamicResource SdaImageOutline}"
+                                BoxShadow="0 1 4 0 #40000000"
+                                CornerRadius="16">
                             <Grid ColumnDefinitions="68,*">
-                                <Image Width="60"
-                                       Height="60"
-                                       Stretch="Uniform"
-                                       IsVisible="{Binding HasIcon}"
-                                       Source="{Binding IconBytes, Converter={StaticResource ByteArrayImage}}" />
+                                <Border Width="60"
+                                        Height="60"
+                                        CornerRadius="16"
+                                        ClipToBounds="True"
+                                        BorderThickness="1"
+                                        BorderBrush="{DynamicResource SdaImageOutline}"
+                                        IsVisible="{Binding HasIcon}">
+                                    <Image Width="60"
+                                           Height="60"
+                                           Stretch="Uniform"
+                                           Source="{Binding IconBytes, Converter={StaticResource ByteArrayImage}}" />
+                                </Border>
                                 <StackPanel Grid.Column="1" Spacing="4">
-                                    <TextBlock Text="{Binding Headline}" FontWeight="SemiBold" TextWrapping="Wrap" />
-                                    <TextBlock Text="{Binding CreatorText}" TextWrapping="Wrap" />
-                                    <TextBlock Text="{Binding SummaryText}" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding Headline}" FontWeight="SemiBold" TextWrapping="Wrap" LineHeight="21" />
+                                    <TextBlock Text="{Binding CreatorText}" TextWrapping="Wrap" LineHeight="21" />
+                                    <TextBlock Text="{Binding SummaryText}" TextWrapping="Wrap" LineHeight="21" />
                                     <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
                                         <Button Content="{Binding AcceptLabel}"
                                                 MinWidth="88"

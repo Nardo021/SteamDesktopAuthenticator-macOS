@@ -1,16 +1,19 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.DeactivateConfirmCodeWindow"
+        Classes="sdaDialog"
         Title="Deactivate Authenticator"
         Width="460"
-        Height="260"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="220">
     <StackPanel Margin="20" Spacing="10">
-        <TextBlock x:Name="PromptText" TextWrapping="Wrap" />
+        <TextBlock x:Name="PromptText" TextWrapping="Wrap" LineHeight="21" />
         <TextBlock Text="Enter this confirmation code:" />
-        <TextBox x:Name="CodeDisplay" IsReadOnly="True" FontFamily="Menlo, Consolas, monospace" FontSize="22" />
-        <TextBox x:Name="CodeBox" />
+        <TextBox x:Name="CodeDisplay"
+                 IsReadOnly="True"
+                 FontFamily="Menlo, Consolas, monospace"
+                 FontSize="22"
+                 AutomationProperties.Name="Expected confirmation code" />
+        <TextBox x:Name="CodeBox" AutomationProperties.Name="Confirmation code" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
             <Button Content="Confirm" MinWidth="88" IsDefault="True" Click="OnConfirmClick" />

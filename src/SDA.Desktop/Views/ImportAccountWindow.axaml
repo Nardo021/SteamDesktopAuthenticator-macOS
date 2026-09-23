@@ -1,21 +1,32 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.ImportAccountWindow"
+        Classes="sdaDialog"
         Title="Import Account"
         Width="500"
-        Height="320"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="260">
     <StackPanel Margin="20" Spacing="10">
-        <TextBlock Text="Source .maFile" />
+        <TextBlock Text="Source maFile" />
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <TextBox Grid.Column="0" Text="{Binding SourcePath}" IsReadOnly="True" />
+            <TextBox Grid.Column="0"
+                     Text="{Binding SourcePath}"
+                     IsReadOnly="True"
+                     AutomationProperties.Name="Source maFile" />
             <Button Grid.Column="1" Content="Browse" MinWidth="88" Click="OnBrowseClick" />
         </Grid>
         <TextBlock Text="Source maFile encryption passkey" />
-        <TextBox x:Name="SourcePasskeyBox" PasswordChar="*" />
-        <TextBlock Text="Leave blank if the selected maFile is not encrypted." TextWrapping="Wrap" />
-        <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="32" />
+        <TextBox x:Name="SourcePasskeyBox"
+                 PasswordChar="*"
+                 AutomationProperties.Name="Source maFile encryption passkey" />
+        <TextBlock Text="Leave blank if the selected maFile is not encrypted."
+                   TextWrapping="Wrap"
+                   LineHeight="21" />
+        <TextBlock Text="{Binding StatusText}"
+                   TextWrapping="Wrap"
+                   LineHeight="21"
+                   MinHeight="32"
+                   Foreground="{DynamicResource SdaErrorBrush}"
+                   AutomationProperties.LiveSetting="Assertive" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
             <Button Content="Import" MinWidth="88" IsDefault="True" IsEnabled="{Binding CanImport}" Click="OnImportClick" />

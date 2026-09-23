@@ -101,6 +101,7 @@ namespace SDA.Desktop.Views
                 if (!result.Succeeded || result.Session == null)
                 {
                     _viewModel.MarkFailed(result.Error);
+                    PasswordBox.Focus();
                     return;
                 }
 
@@ -116,6 +117,7 @@ namespace SDA.Desktop.Views
                 if (!string.IsNullOrEmpty(saveError))
                 {
                     _viewModel.MarkFailed(saveError);
+                    PasswordBox.Focus();
                     return;
                 }
 
@@ -124,7 +126,8 @@ namespace SDA.Desktop.Views
             }
             catch (Exception)
             {
-                _viewModel.MarkFailed("Steam login failed.");
+                _viewModel.MarkFailed(null);
+                PasswordBox.Focus();
             }
             finally
             {

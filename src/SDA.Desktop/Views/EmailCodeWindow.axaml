@@ -1,14 +1,22 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.EmailCodeWindow"
+        Classes="sdaDialog"
         Title="Steam Email Code"
         Width="420"
-        Height="230"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="180">
     <StackPanel Margin="20" Spacing="10">
-        <TextBlock x:Name="PromptText" Text="Enter the code sent to your email" TextWrapping="Wrap" />
-        <TextBox x:Name="CodeBox" />
+        <TextBlock x:Name="PromptText"
+                   Text="Enter the code sent to your email."
+                   TextWrapping="Wrap"
+                   LineHeight="21" />
+        <TextBox x:Name="CodeBox" AutomationProperties.Name="Email code" />
+        <TextBlock x:Name="ErrorText"
+                   Foreground="{DynamicResource SdaErrorBrush}"
+                   TextWrapping="Wrap"
+                   LineHeight="21"
+                   MinHeight="20"
+                   AutomationProperties.LiveSetting="Assertive" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
             <Button Content="Submit" MinWidth="88" IsDefault="True" Click="OnSubmitClick" />

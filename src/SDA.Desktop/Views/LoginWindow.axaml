@@ -1,18 +1,25 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="SDA.Desktop.Views.LoginWindow"
+        Classes="sdaDialog"
         Title="{Binding Title}"
         Width="420"
-        Height="280"
-        CanResize="False"
-        WindowStartupLocation="CenterOwner">
+        MinHeight="240">
     <StackPanel Margin="20" Spacing="10">
         <TextBlock Text="Steam account" />
-        <TextBox Text="{Binding AccountName}" IsReadOnly="True" />
+        <TextBox Text="{Binding AccountName}"
+                 IsReadOnly="True"
+                 AutomationProperties.Name="Steam account" />
         <TextBlock Text="Password" />
-        <TextBox x:Name="PasswordBox" PasswordChar="*" />
-        <TextBlock Text="{Binding SessionHint}" TextWrapping="Wrap" />
-        <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" MinHeight="20" />
+        <TextBox x:Name="PasswordBox"
+                 PasswordChar="*"
+                 AutomationProperties.Name="Password" />
+        <TextBlock Text="{Binding SessionHint}" TextWrapping="Wrap" LineHeight="21" />
+        <TextBlock Text="{Binding StatusText}"
+                   TextWrapping="Wrap"
+                   LineHeight="21"
+                   MinHeight="20"
+                   AutomationProperties.LiveSetting="Assertive" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
             <Button Content="Cancel" MinWidth="88" IsCancel="True" Click="OnCancelClick" />
             <Button Content="{Binding LoginButtonText}"

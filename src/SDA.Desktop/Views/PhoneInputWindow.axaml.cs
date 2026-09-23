@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using SDA.Desktop.Services;
+using System;
 
 namespace SDA.Desktop.Views
 {
@@ -15,12 +16,27 @@ namespace SDA.Desktop.Views
 
         public string CountryCode { get; private set; }
 
+        protected override void OnOpened(EventArgs e)
+        {
+            base.OnOpened(e);
+            PhoneBox.Focus();
+        }
+
         private void OnContinueClick(object sender, RoutedEventArgs e)
         {
             PhoneValidationResult result = AuthenticatorEnrollmentService.ValidatePhone(PhoneBox.Text, CountryBox.Text);
             if (!result.Valid)
             {
                 ErrorText.Text = result.Error;
+                if (result.Field == PhoneValidationField.Country)
+                {
+                    CountryBox.Focus();
+                }
+                else
+                {
+                    PhoneBox.Focus();
+                }
+
                 return;
             }
 

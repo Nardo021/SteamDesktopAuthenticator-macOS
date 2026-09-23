@@ -18,4 +18,4 @@ done
 
 "$SCRIPT_DIR/write-checksums.sh"
 echo "Unsigned packaging complete in $DIST_DIR"
-echo "v1.0.0 does not sign or notarize. sign-app.sh / notarize.sh remain optional for a later release."
+echo "Unsigned packaging does not sign or notarize. sign-app.sh / notarize.sh remain optional for a later release."
