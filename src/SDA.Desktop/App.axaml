@@ -8,7 +8,7 @@
             <NativeMenuItem Header="About Steam Desktop Authenticator" Click="OnAboutClick" />
             <NativeMenuItem Header="Check for Updates..." Click="OnCheckUpdatesClick" />
             <NativeMenuItemSeparator />
-            <NativeMenuItem Header="Settings..." Gesture="Meta+Comma" Click="OnSettingsClick" />
+            <NativeMenuItem Header="Settings..." Click="OnSettingsClick" />
         </NativeMenu>
     </NativeMenu.Menu>
     <Application.Resources>

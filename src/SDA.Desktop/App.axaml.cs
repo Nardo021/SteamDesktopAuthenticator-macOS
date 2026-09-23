@@ -1,11 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using SDA.Desktop.Services;
 using SDA.Desktop.ViewModels;
 using SDA.Desktop.Views;
 using System;
+using System.Linq;
 
 namespace SDA.Desktop
 {
@@ -25,6 +27,7 @@ namespace SDA.Desktop
 
         public override void OnFrameworkInitializationCompleted()
         {
+            ApplySettingsGesture();
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 _desktop = desktop;
@@ -91,6 +94,24 @@ namespace SDA.Desktop
             if (CurrentLifecycle != null)
             {
                 CurrentLifecycle.HandleExternalShutdown();
+            }
+        }
+
+        private void ApplySettingsGesture()
+        {
+            NativeMenu menu = NativeMenu.GetMenu(this);
+            if (menu == null)
+            {
+                return;
+            }
+
+            foreach (NativeMenuItem item in menu.Items.OfType<NativeMenuItem>())
+            {
+                if (item.Header == "Settings...")
+                {
+                    item.Gesture = new KeyGesture(Key.OemComma, KeyModifiers.Meta);
+                    return;
+                }
             }
         }
 

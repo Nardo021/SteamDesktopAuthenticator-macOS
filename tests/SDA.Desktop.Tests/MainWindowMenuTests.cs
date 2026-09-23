@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using SDA.Desktop.Views;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -30,6 +31,15 @@ namespace SDA.Desktop.Tests
             Assert.Equal(new[] { "Check for Updates..." }, Headers(menu.HelpItem.Menu));
             Assert.Equal(new KeyGesture(Key.O, KeyModifiers.Meta), menu.OpenFolderItem.Gesture);
             Assert.Equal(new KeyGesture(Key.I, KeyModifiers.Meta | KeyModifiers.Shift), menu.ImportAccountItem.Gesture);
+        }
+
+        [Fact]
+        public void SettingsShortcut_RequiresOemCommaNotCommaToken()
+        {
+            Assert.Throws<ArgumentException>(() => KeyGesture.Parse("Meta+Comma"));
+            KeyGesture gesture = new KeyGesture(Key.OemComma, KeyModifiers.Meta);
+            Assert.Equal(Key.OemComma, gesture.Key);
+            Assert.Equal(KeyModifiers.Meta, gesture.KeyModifiers);
         }
 
         [Fact]
