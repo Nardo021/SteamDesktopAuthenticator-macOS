@@ -100,8 +100,8 @@ namespace SDA.Desktop.Services
 
     public sealed class ConfirmationService
     {
-        public const string SessionExpiredMessage = "Your session has expired. Use Login Again under Selected Account.";
-        public const string ForceRefreshMessage = "Steam needs a refreshed session. Use Force Session Refresh under Selected Account.";
+        public const string SessionExpiredMessage = "Your session has expired. Use Login Again from the Account menu.";
+        public const string ForceRefreshMessage = "Steam needs a refreshed session. Use Force Session Refresh from the Account menu.";
         public const string EmptyMessage = "No confirmations right now.";
 
         private readonly IConfirmationClient _client;

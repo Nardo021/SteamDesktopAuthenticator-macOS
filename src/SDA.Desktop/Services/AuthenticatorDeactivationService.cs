@@ -70,7 +70,7 @@ namespace SDA.Desktop.Services
         public const int EmailScheme = 1;
         public const int RemoveCompletelyScheme = 2;
 
-        public const string SessionExpiredMessage = "Your session has expired. Use Login Again under Selected Account.";
+        public const string SessionExpiredMessage = "Your session has expired. Use Login Again from the Account menu.";
         public const string ConfirmationMismatchMessage = "Confirmation codes do not match. Steam Guard not removed.";
         public const string RemoteFailedMessage = "Steam Guard could not be deactivated. Check the connection and try again.";
         public const string LocalCleanupFailedMessage = "Steam authenticator deactivation succeeded, but SDA could not fully remove the local maFile.";

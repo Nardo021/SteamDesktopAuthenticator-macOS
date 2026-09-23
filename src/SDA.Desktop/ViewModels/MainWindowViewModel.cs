@@ -125,6 +125,7 @@ namespace SDA.Desktop.ViewModels
                 _selectedAccount = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanUseSessionActions));
+                OnPropertyChanged(nameof(CanViewConfirmations));
                 OnPropertyChanged(nameof(CanReorderAccounts));
                 ApplyDisplay();
             }
@@ -133,6 +134,11 @@ namespace SDA.Desktop.ViewModels
         public bool CanUseSessionActions
         {
             get { return SelectedAccount != null && _sessionOperation == 0; }
+        }
+
+        public bool CanViewConfirmations
+        {
+            get { return SelectedAccount != null; }
         }
 
         public bool ManifestEncrypted

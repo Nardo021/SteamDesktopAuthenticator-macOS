@@ -22,18 +22,7 @@ namespace SDA.Desktop.Views
         private readonly TimerService _timer = new TimerService();
         private readonly ApplicationLifecycleService _lifecycle;
         private readonly ConfirmationsWindowCoordinator _confirmations;
-        private NativeMenuItem _loginAgainItem;
-        private NativeMenuItem _forceRefreshItem;
-        private NativeMenuItem _viewConfirmationsItem;
-        private NativeMenuItem _setupNewAccountItem;
-        private NativeMenuItem _importAccountItem;
-        private NativeMenuItem _removeFromManifestItem;
-        private NativeMenuItem _deactivateItem;
-        private NativeMenuItem _encryptionItem;
-        private NativeMenuItem _settingsItem;
-        private NativeMenuItem _checkUpdatesItem;
-        private NativeMenuItem _quitItem;
-        private NativeMenu _sessionMenu;
+        private readonly MainWindowMenu _menu = new MainWindowMenu();
         private SetupAccountWindow _setupWindow;
         private ImportAccountWindow _importWindow;
         private readonly AuthenticatorDeactivationService _deactivation = new AuthenticatorDeactivationService();
@@ -74,28 +63,18 @@ namespace SDA.Desktop.Views
                 ShowActivated = false;
                 Opacity = 0;
             }
-            _loginAgainItem = new NativeMenuItem("Login Again");
-            _forceRefreshItem = new NativeMenuItem("Force Session Refresh");
-            _viewConfirmationsItem = new NativeMenuItem("View Confirmations");
-            _loginAgainItem.Click += OnLoginAgainClick;
-            _forceRefreshItem.Click += OnForceRefreshClick;
-            _viewConfirmationsItem.Click += OnViewConfirmationsClick;
-            _setupNewAccountItem = new NativeMenuItem("Setup New Account");
-            _setupNewAccountItem.Click += OnSetupNewAccountClick;
-            _importAccountItem = new NativeMenuItem("Import Account");
-            _importAccountItem.Click += OnImportAccountClick;
-            _removeFromManifestItem = new NativeMenuItem("Remove from Manifest");
-            _removeFromManifestItem.Click += OnRemoveFromManifestClick;
-            _deactivateItem = new NativeMenuItem("Deactivate Authenticator");
-            _deactivateItem.Click += OnDeactivateAuthenticatorClick;
-            _encryptionItem = new NativeMenuItem("Setup Encryption");
-            _encryptionItem.Click += OnManageEncryptionClick;
-            _settingsItem = new NativeMenuItem("Settings");
-            _settingsItem.Click += OnSettingsClick;
-            _checkUpdatesItem = new NativeMenuItem("Check for Updates...");
-            _checkUpdatesItem.Click += OnCheckUpdatesClick;
-            _quitItem = new NativeMenuItem("Quit");
-            _quitItem.Click += OnQuitClick;
+            _menu.CheckUpdatesAction = CheckForUpdates;
+            _menu.OpenFolderItem.Click += OnOpenFolderMenuClick;
+            _menu.ImportAccountItem.Click += OnImportAccountClick;
+            _menu.CopyCodeItem.Click += OnCopyMenuClick;
+            _menu.SetupNewAccountItem.Click += OnSetupNewAccountClick;
+            _menu.LoginAgainItem.Click += OnLoginAgainClick;
+            _menu.ForceRefreshItem.Click += OnForceRefreshClick;
+            _menu.ViewConfirmationsItem.Click += OnViewConfirmationsClick;
+            _menu.RemoveFromManifestItem.Click += OnRemoveFromManifestClick;
+            _menu.DeactivateItem.Click += OnDeactivateAuthenticatorClick;
+            _menu.EncryptionItem.Click += OnManageEncryptionClick;
+            _menu.ShowMainWindowItem.Click += OnShowMainWindowClick;
             IConfirmationClient confirmationClient = new SteamGuardAccountConfirmationClient();
             ConfirmationService confirmationService = new ConfirmationService(confirmationClient);
             _popupViewModel = new ConfirmationPopupViewModel(confirmationClient);
@@ -108,35 +87,8 @@ namespace SDA.Desktop.Views
             _periodic.StatusRaised += OnPeriodicStatus;
             _coordinator = new BackgroundConfirmationCoordinator(_periodic, _popupViewModel, () => this);
             _viewModel.ManifestContextChanged += OnManifestContextChanged;
-            NativeMenu fileMenu = new NativeMenu();
-            fileMenu.Add(_importAccountItem);
-            fileMenu.Add(_settingsItem);
-            fileMenu.Add(_checkUpdatesItem);
-            fileMenu.Add(_quitItem);
-            NativeMenuItem fileItem = new NativeMenuItem("File");
-            fileItem.Menu = fileMenu;
-            NativeMenu setupMenu = new NativeMenu();
-            setupMenu.Add(_setupNewAccountItem);
-            NativeMenuItem setupItem = new NativeMenuItem("Setup New Account");
-            setupItem.Menu = setupMenu;
-            NativeMenu accountMenu = new NativeMenu();
-            accountMenu.Add(_loginAgainItem);
-            accountMenu.Add(_forceRefreshItem);
-            accountMenu.Add(_viewConfirmationsItem);
-            accountMenu.Add(_removeFromManifestItem);
-            accountMenu.Add(_deactivateItem);
-            NativeMenuItem accountItem = new NativeMenuItem("Selected Account");
-            accountItem.Menu = accountMenu;
-            NativeMenu encryptionMenu = new NativeMenu();
-            encryptionMenu.Add(_encryptionItem);
-            NativeMenuItem encryptionParent = new NativeMenuItem("Encryption");
-            encryptionParent.Menu = encryptionMenu;
-            _sessionMenu = new NativeMenu();
-            _sessionMenu.Add(fileItem);
-            _sessionMenu.Add(setupItem);
-            _sessionMenu.Add(accountItem);
-            _sessionMenu.Add(encryptionParent);
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _menu.Attach(this);
             UpdateSessionMenu();
         }
 
@@ -150,13 +102,25 @@ namespace SDA.Desktop.Views
             get { return _confirmations; }
         }
 
+        public void ShowAbout()
+        {
+            RunOnUi(() => _ = ShowAboutAsync());
+        }
+
+        public void CheckForUpdates()
+        {
+            RunOnUi(() => _ = CheckForUpdatesAsync(true));
+        }
+
+        public void ShowSettings()
+        {
+            RunOnUi(() => OnSettingsClick(this, EventArgs.Empty));
+        }
+
         protected override void OnOpened(EventArgs e)
         {
             base.OnOpened(e);
-            if (_sessionMenu != null && NativeMenu.GetMenu(this) != _sessionMenu)
-            {
-                NativeMenu.SetMenu(this, _sessionMenu);
-            }
+            _menu.Attach(this);
 
             if (_lifecycle != null)
             {
@@ -230,13 +194,19 @@ namespace SDA.Desktop.Views
             await CheckForUpdatesAsync(true);
         }
 
-        private async void OnCheckUpdatesClick(object sender, EventArgs e)
-        {
-            await CheckForUpdatesAsync(true);
-        }
-
         private async Task CheckForUpdatesAsync(bool manual)
         {
+            if (!Dispatcher.UIThread.CheckAccess())
+            {
+                await Dispatcher.UIThread.InvokeAsync(() => CheckForUpdatesAsync(manual));
+                return;
+            }
+
+            if (manual)
+            {
+                EnsureMainWindowVisible();
+            }
+
             try
             {
                 UpdateCheckService checker = new UpdateCheckService(AppVersion.Informational, new GitHubUpdateReleaseSource());
@@ -319,6 +289,7 @@ namespace SDA.Desktop.Views
 
         private async void OnSettingsClick(object sender, EventArgs e)
         {
+            EnsureMainWindowVisible();
             SettingsWindowViewModel settings = new SettingsWindowViewModel(
                 new ManifestSettingsService(),
                 _viewModel.CurrentDirectory);
@@ -330,6 +301,21 @@ namespace SDA.Desktop.Views
             }
         }
 
+        private void OnSetupNewAccountButtonClick(object sender, RoutedEventArgs e)
+        {
+            OnSetupNewAccountClick(sender, e);
+        }
+
+        private void OnViewConfirmationsButtonClick(object sender, RoutedEventArgs e)
+        {
+            OnViewConfirmationsClick(sender, e);
+        }
+
+        private void OnManageEncryptionButtonClick(object sender, RoutedEventArgs e)
+        {
+            OnManageEncryptionClick(sender, e);
+        }
+
         private async void OnSetupNewAccountClick(object sender, EventArgs e)
         {
             if (_setupWindow != null)
@@ -338,7 +324,7 @@ namespace SDA.Desktop.Views
                 return;
             }
 
-            _setupNewAccountItem.IsEnabled = false;
+            SetSetupNewAccountEnabled(false);
             SetupAccountWindow window = new SetupAccountWindow(
                 new SteamLoginService(),
                 new SteamAuthAuthenticatorLinkerFactory(),
@@ -370,20 +356,12 @@ namespace SDA.Desktop.Views
             }
 
             _setupWindow = null;
-            _setupNewAccountItem.IsEnabled = true;
+            SetSetupNewAccountEnabled(true);
         }
 
         private void OnViewConfirmationsClick(object sender, EventArgs e)
         {
             _confirmations.ShowForSelectedAccount();
-        }
-
-        private void OnQuitClick(object sender, EventArgs e)
-        {
-            if (_lifecycle != null)
-            {
-                _lifecycle.Quit();
-            }
         }
 
         private async void OnForceRefreshClick(object sender, EventArgs e)
@@ -404,6 +382,7 @@ namespace SDA.Desktop.Views
                 || e.PropertyName == nameof(MainWindowViewModel.SelectedAccount)
                 || e.PropertyName == nameof(MainWindowViewModel.CanManageEncryption)
                 || e.PropertyName == nameof(MainWindowViewModel.EncryptionMenuText)
+                || e.PropertyName == nameof(MainWindowViewModel.CanCopyCode)
                 || string.IsNullOrEmpty(e.PropertyName))
             {
                 UpdateSessionMenu();
@@ -412,14 +391,66 @@ namespace SDA.Desktop.Views
 
         private void UpdateSessionMenu()
         {
-            bool enabled = _viewModel.CanUseSessionActions;
-            _loginAgainItem.IsEnabled = enabled;
-            _forceRefreshItem.IsEnabled = enabled;
-            _viewConfirmationsItem.IsEnabled = _viewModel.SelectedAccount != null;
-            _removeFromManifestItem.IsEnabled = _viewModel.SelectedAccount != null;
-            _deactivateItem.IsEnabled = _viewModel.SelectedAccount != null;
-            _encryptionItem.Header = _viewModel.EncryptionMenuText;
-            _encryptionItem.IsEnabled = _viewModel.CanManageEncryption;
+            _menu.Update(_viewModel);
+        }
+
+        private void SetSetupNewAccountEnabled(bool enabled)
+        {
+            _menu.SetupNewAccountItem.IsEnabled = enabled;
+            if (SetupNewAccountButton != null)
+            {
+                SetupNewAccountButton.IsEnabled = enabled;
+            }
+        }
+
+        private async Task ShowAboutAsync()
+        {
+            EnsureMainWindowVisible();
+            await ShowMessageAsync(
+                "About Steam Desktop Authenticator",
+                "Steam Desktop Authenticator\nVersion "
+                + AppVersion.Informational
+                + "\n\nUnsigned macOS port. Apple has not verified the developer identity.\n\n"
+                + "https://github.com/Nardo021/SteamDesktopAuthenticator-macOS");
+        }
+
+        private static void RunOnUi(Action action)
+        {
+            if (action == null)
+            {
+                return;
+            }
+
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                action();
+                return;
+            }
+
+            Dispatcher.UIThread.Post(action);
+        }
+
+        private void OnShowMainWindowClick(object sender, EventArgs e)
+        {
+            EnsureMainWindowVisible();
+        }
+
+        private async void OnCopyMenuClick(object sender, EventArgs e)
+        {
+            await _viewModel.CopyAsync();
+        }
+
+        private async void OnOpenFolderMenuClick(object sender, EventArgs e)
+        {
+            await _viewModel.OpenFolderAsync();
+        }
+
+        private void EnsureMainWindowVisible()
+        {
+            if (_lifecycle != null)
+            {
+                _lifecycle.ShowMainWindow();
+            }
         }
 
         private async void OnImportAccountClick(object sender, EventArgs e)

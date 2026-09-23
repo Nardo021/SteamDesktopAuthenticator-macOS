@@ -205,6 +205,8 @@ namespace SDA.Desktop.Tests
             Assert.Equal("PFRRH", harness.ViewModel.CurrentCode);
             Assert.Equal("expires in 20s", harness.ViewModel.CountdownText);
             Assert.True(harness.ViewModel.CanCopyCode);
+            Assert.True(harness.ViewModel.CanViewConfirmations);
+            Assert.True(harness.ViewModel.CanViewConfirmations);
 
             await harness.ViewModel.CopyAsync();
 

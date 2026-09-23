@@ -93,5 +93,29 @@ namespace SDA.Desktop
                 CurrentLifecycle.HandleExternalShutdown();
             }
         }
+
+        private void OnAboutClick(object sender, EventArgs e)
+        {
+            if (_mainWindow != null)
+            {
+                _mainWindow.ShowAbout();
+            }
+        }
+
+        private void OnCheckUpdatesClick(object sender, EventArgs e)
+        {
+            if (_mainWindow != null)
+            {
+                _mainWindow.CheckForUpdates();
+            }
+        }
+
+        private void OnSettingsClick(object sender, EventArgs e)
+        {
+            if (_mainWindow != null)
+            {
+                _mainWindow.ShowSettings();
+            }
+        }
     }
 }
