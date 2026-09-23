@@ -8,8 +8,8 @@ namespace SDA.Desktop.Tests
         [Fact]
         public void Informational_IsCentralizedProductVersion()
         {
-            Assert.Equal("1.0.1", AppVersion.Informational);
-            Assert.Equal("v1.0.1", AppVersion.DisplayLabel);
+            Assert.Equal("1.0.2", AppVersion.Informational);
+            Assert.Equal("v1.0.2", AppVersion.DisplayLabel);
         }
     }
 }

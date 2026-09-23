@@ -37,19 +37,11 @@
                        FontWeight="SemiBold"
                        FontFamily="Menlo, Consolas, monospace"
                        HorizontalAlignment="Center"
-                       AutomationProperties.Name="Steam Guard Code">
-                <TextBlock.FontFeatures>
-                    <FontFeature Tag="tnum" />
-                </TextBlock.FontFeatures>
-            </TextBlock>
+                       AutomationProperties.Name="Steam Guard Code" />
             <TextBlock Text="{Binding CountdownText}"
                        FontFamily="Menlo, Consolas, monospace"
                        HorizontalAlignment="Center"
-                       AutomationProperties.Name="Code countdown">
-                <TextBlock.FontFeatures>
-                    <FontFeature Tag="tnum" />
-                </TextBlock.FontFeatures>
-            </TextBlock>
+                       AutomationProperties.Name="Code countdown" />
             <Button Content="Copy Code"
                     MinWidth="160"
                     HorizontalAlignment="Center"
